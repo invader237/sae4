@@ -6,7 +6,7 @@ services:
     volumes:
       - ./serveur:/var/www/html
     ports:
-      - "8080:80"
+      - "8080:8000"
     networks:
       - app_network
 
