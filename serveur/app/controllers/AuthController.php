@@ -5,6 +5,7 @@ class AuthController {
     public static function login() {
         header('Content-Type: application/json');
 
+<<<<<<< HEAD
         $body = file_get_contents('php://input');
         $data = json_decode($body, true); 
 
@@ -18,6 +19,18 @@ class AuthController {
         }
 
         $jwt = AuthService::login($email, $password);
+=======
+        $id = $_POST['id'] ?? null;
+        $password = $_POST['password'] ?? null;
+
+        if (!$id || !$password) {
+            http_response_code(400);
+            echo json_encode(["message" => "ID et mot de passe requis"]);
+            return;
+        }
+
+        $jwt = AuthService::login($id, $password);
+>>>>>>> a8b2ccf (:sparkles:(validation): check required parameters and return error if missing)
 
         if ($jwt) {
             echo json_encode(["token" => $jwt]);
