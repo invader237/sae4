@@ -1,5 +1,6 @@
 <?php
 class User {
+<<<<<<< HEAD
     private $idUtilisateur;
     private $prenom;
     private $nom;
