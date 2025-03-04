@@ -39,4 +39,11 @@ class AuthService {
             return null;
         }
     }
+
+    public static function register($prenom, $nom, $date_naissance, $email, $mdp, $id_civilite) {
+        $db = Database::getConnection();
+        $userDAO = new UserDAO($db);
+        $user = new User(0, $prenom, $nom, $date_naissance, $email, hash('sha256', $mdp), $id_civilite);
+        $userDAO->createUser($user);
+    }
 }
