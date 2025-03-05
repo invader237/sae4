@@ -5,16 +5,16 @@ class AuthController {
     public static function login() {
         header('Content-Type: application/json');
 
-        $id = $_POST['id'] ?? null;
+        $email = $_POST['email'] ?? null;
         $password = $_POST['password'] ?? null;
 
-        if (!$id || !$password) {
+        if (!$email || !$password) {
             http_response_code(400);
             echo json_encode(["message" => "ID et mot de passe requis"]);
             return;
         }
 
-        $jwt = AuthService::login($id, $password);
+        $jwt = AuthService::login($email, $password);
 
         if ($jwt) {
             echo json_encode(["token" => $jwt]);
