@@ -28,8 +28,6 @@ class AuthService {
 
         try {
             $jwt = JWT::encode([
-                "iss" => "http://localhost:8000",
-                "aud" => "http://localhost:8000",
                 "iat" => time(),
                 "exp" => time() + 3600,
                 "id" => $id
