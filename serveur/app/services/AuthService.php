@@ -5,11 +5,8 @@ require_once('./app/lib/jwt/Key.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-<<<<<<< HEAD
 require_once('./app/core/VarEnv.php');
 
-=======
->>>>>>> ef44045 (:sparkles:(auth): implement authentication logic)
 require_once('./app/DAO/UserDAO.php');
 require_once('./app/entity/User.php');
 require_once('./app/core/Connexion.php');
