@@ -9,14 +9,6 @@ class UserDAO {
         $this->pdo = $pdo;
     }
 
-    //1 id_utilisateur Primaire	int(11)			Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//2	prenom	varchar(40)	utf8_bin		Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//3	nom	varchar(40)	utf8_bin		Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//4	date_naissance	date			Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//5	email	varchar(40)	utf8_bin		Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//6	mdp	varchar(40)	utf8_bin		Non	Aucun(e)			Modifier Modifier	Supprimer Supprimer	
-	//7	id_civilite 
-
     public function getUserById(int $id): ?User {
         $stmt = $this->pdo->prepare('SELECT * FROM UTILISATEUR WHERE id_utilisateur = :id');
         $stmt->execute(['id' => $id]);
