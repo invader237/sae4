@@ -13,10 +13,10 @@ require_once('./app/core/Connexion.php');
 
 class AuthService {
 
-    public static function login($id, $password) {
+    public static function login($email, $password) {
         $db = Database::getConnection();
         $userDAO = new UserDAO($db);
-        $user = $userDAO->getUserById($id);
+        $user = $userDAO->getUserByEmail($email);
 
         if ($user === null) {
             return null;
@@ -32,7 +32,7 @@ class AuthService {
             $jwt = JWT::encode([
                 "iat" => time(),
                 "exp" => time() + 3600,
-                "id" => $id
+                "id" => $user->getIdUtilisateur(),
             ], SECURITY_SALT, 'HS256');
             return $jwt;
         } catch (Exception $e) {
