@@ -1,10 +1,8 @@
 <?php
 require_once('./app/services/ProductService.php');
 
-class ProductController
-{
-    public static function getAllProducts()
-    {
+class ProductController {
+    public static function getAllProducts() {
         header('Content-Type: application/json');
 
         $products = ProductController::getAllProducts();
