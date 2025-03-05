@@ -1,25 +1,25 @@
 <?php
 class User {
-    private $id_utilisateur;
+    private $idUtilisateur;
     private $prenom;
     private $nom;
-    private $date_naissance;
+    private $dateNaissance;
     private $email;
     private $mdp;
-    private $id_civilite;
+    private $idCivilite;
 
-    public function __construct($id_utilisateur, $prenom, $nom, $date_naissance, $email, $mdp, $id_civilite) {
-        $this->id_utilisateur = $id_utilisateur;
+    public function __construct($idUtilisateur, $prenom, $nom, $dateNaissance, $email, $mdp, $idCivilite) {
+        $this->idUtilisateur = $idUtilisateur;
         $this->prenom = $prenom;
         $this->nom = $nom;
-        $this->date_naissance = $date_naissance;
+        $this->dateNaissance = $dateNaissance;
         $this->email = $email;
         $this->mdp = $mdp;
-        $this->id_civilite = $id_civilite;
+        $this->idCivilite = $idCivilite;
     }
 
-    public function getId_utilisateur() {
-        return $this->id_utilisateur;
+    public function getIdUtilisateur() {
+        return $this->idUtilisateur;
     }
 
     public function getPrenom() {
@@ -30,8 +30,8 @@ class User {
         return $this->nom;
     }
 
-    public function getDate_naissance() {
-        return $this->date_naissance;
+    public function getDateNaissance() {
+        return $this->dateNaissance;
     }
 
     public function getEmail() {
@@ -42,12 +42,12 @@ class User {
         return $this->mdp;
     }
 
-    public function getId_civilite() {
-        return $this->id_civilite;
+    public function getIdCivilite() {
+        return $this->idCivilite;
     }
 
-    public function setId_utilisateur($id_utilisateur) {
-        $this->id_utilisateur = $id_utilisateur;
+    public function setIdUtilisateur($idUtilisateur) {
+        $this->idUtilisateur = $idUtilisateur;
     }
 
     public function setPrenom($prenom) {
@@ -58,8 +58,8 @@ class User {
         $this->nom = $nom;
     }
 
-    public function setDate_naissance($date_naissance) {
-        $this->date_naissance = $date_naissance;
+    public function setDateNaissance($dateNaissance) {
+        $this->dateNaissance = $dateNaissance;
     }
 
     public function setEmail($email) {
@@ -70,8 +70,8 @@ class User {
         $this->mdp = $mdp;
     }
 
-    public function setId_civilite($id_civilite) {
-        $this->id_civilite = $id_civilite;
+    public function setIdCivilite($idCivilite) {
+        $this->idCivilite = $idCivilite;
     }
 
 }
