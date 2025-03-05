@@ -1,9 +1,5 @@
 <?php
 class User {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f152694 (:recycle:(User): rename user properties for consistency)
     private $idUtilisateur;
     private $prenom;
     private $nom;
