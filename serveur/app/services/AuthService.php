@@ -5,6 +5,8 @@ require_once('./app/lib/jwt/Key.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+require_once('./app/core/VarEnv.php');
+
 require_once('./app/DAO/UserDAO.php');
 require_once('./app/entity/User.php');
 require_once('./app/core/Connexion.php');
@@ -31,7 +33,7 @@ class AuthService {
                 "iat" => time(),
                 "exp" => time() + 3600,
                 "id" => $id
-            ], "testkey", 'HS256');
+            ], SECURITY_SALT, 'HS256');
             return $jwt;
         } catch (Exception $e) {
             return null;
