@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+require_once('./app/core/VarEnv.php');
+
 class Database {
     private static ?PDO $instance = null;
 
@@ -9,11 +11,11 @@ class Database {
     public static function getConnection(): PDO {
         if (self::$instance === null) {
             $db_config = [
-                'SGBD' => 'mysql',
-                'HOST' => 'devbdd.iutmetz.univ-lorraine.fr',
-                'DB_NAME' => 'trivino7u_SAE4',
-                'USER' => 'trivino7u_appli',
-                'PASSWORD' => 'leadiego'
+                'SGBD' => SGBD,
+                'HOST' => DB_HOST,
+                'DB_NAME' => DB_NAME,
+                'USER' => DB_USER,
+                'PASSWORD' => DB_PASSWORD
             ];
 
             try {

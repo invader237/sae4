@@ -8,8 +8,10 @@ require_once('./app/lib/jwt/ExpiredException.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+require_once('./app/core/VarEnv.php');
+
 class AuthMiddleware {
-    private static  $secretKey = "security_salt"; 
+    private static  $secretKey = SECURITY_SALT; 
 
     public static function getUser() {
         $headers = getallheaders();
