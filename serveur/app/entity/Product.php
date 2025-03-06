@@ -63,4 +63,15 @@ class Product {
     public function setId_categorie($id_categorie) {
         $this->id_categorie = $id_categorie;
     }
+
+    public function toArray() {
+        return [
+            "id_produit"   => $this->getId_produit(),
+            "designation"  => $this->getDesignation(),
+            "description"  => $this->getDescription(),
+            "prix"         => $this->getPrix(),
+            "url_image"    => $this->getUrl_image(),
+            "id_categorie" => $this->getId_categorie()
+        ];
+    }
 }
