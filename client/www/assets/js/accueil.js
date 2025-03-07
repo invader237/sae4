@@ -1,3 +1,4 @@
+<<<<<<< HEAD:client/www/assets/js/accueil.js
 import { getAllProducts } from "./core/api/api.js";
 console.log("ouk");
 async function afficherTousLesProduits() {
@@ -12,6 +13,28 @@ async function afficherTousLesProduits() {
 afficherTousLesProduits();
 
 /*export function imprimerUnProduit(produit) {
+=======
+function afficherTousLesProduits() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const taille = urlParams.get("taille");
+    const couleur = urlParams.get("idCouleur");
+
+    const produitGenerique =
+        "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/getGenericProduits.php";
+    const produitComplet =
+        "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/getProduits.php";
+    const url = taille || couleur ? produitComplet : produitGenerique;
+
+    return fetch(url)
+        .then((reponse) => reponse.json())
+        .then((data) => {
+            imprimerTousLesProduits(data.data);
+        })
+        .catch((error) => console.log(error));
+}
+
+export function imprimerUnProduit(produit) {
+>>>>>>> c4979ee (:construction: WIP):client/assets/js/accueil.js
 
     let path = produit["path_img"] ?
         "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/img/articles/" + produit["path_img"] :
@@ -60,3 +83,4 @@ function imprimerTousLesProduits(produits) {
 }
 afficherTousLesProduits();
 */
+afficherTousLesProduits();
