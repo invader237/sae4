@@ -27,4 +27,17 @@ class ProductController {
             }
         }
     }
+
+    public static function getProductById($id) {
+        header('Content-Type: application/json');
+
+        $product = ProductService::getProductById($id);
+
+        if ($product) {
+            echo json_encode(["data" => $product->toArray()], JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(404);
+            echo json_encode(["message" => "Produit non trouvé."]);
+        }
+    }
 }
