@@ -3,6 +3,10 @@ const routes = {
     "/test": "pages/test.html",
 };
 
+if (!window.location.hash) {
+    window.location.hash = "#/";
+}
+
 const loadPage = async () => {
     const path = window.location.hash.replace("#", "") || "/";
     const page = routes[path] || routes["/"];
