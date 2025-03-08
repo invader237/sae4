@@ -1,23 +1,17 @@
-function afficherTousLesProduits() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const taille = urlParams.get("taille");
-    const couleur = urlParams.get("idCouleur");
-
-    const produitGenerique =
-        "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/getGenericProduits.php";
-    const produitComplet =
-        "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/getProduits.php";
-    const url = taille || couleur ? produitComplet : produitGenerique;
-
-    return fetch(url)
-        .then((reponse) => reponse.json())
-        .then((data) => {
-            imprimerTousLesProduits(data.data);
-        })
-        .catch((error) => console.log(error));
+import { getAllProducts } from "./core/api/api.js";
+console.log("ouk");
+async function afficherTousLesProduits() {
+    try {
+        let produit = await getAllProducts();
+        console.log(produit);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des produits :", error);
+    }
 }
 
-export function imprimerUnProduit(produit) {
+afficherTousLesProduits();
+
+/*export function imprimerUnProduit(produit) {
 
     let path = produit["path_img"] ?
         "https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/img/articles/" + produit["path_img"] :
@@ -65,3 +59,4 @@ function imprimerTousLesProduits(produits) {
     traiterFavori(id_us);
 }
 afficherTousLesProduits();
+*/
