@@ -5,12 +5,15 @@ class AuthController {
     public static function login() {
         header('Content-Type: application/json');
 
-        $email = $_POST['email'] ?? null;
-        $password = $_POST['password'] ?? null;
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $email = $data['email'] ?? null;
+        $password = $data['password'] ?? null;
 
         if (!$email || !$password) {
             http_response_code(400);
-            echo json_encode(["message" => "ID et mot de passe requis"]);
+            echo json_encode(["message" => "ID et mot de passe requis"], status: 400);
             return;
         }
 
