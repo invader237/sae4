@@ -10,3 +10,12 @@ export const <functionName> = async () => {
     }
     };
 */
+
+export const getAllProducts = async () => {
+    try {
+        const response = await axiosInstance.get("/getAllProducts");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
