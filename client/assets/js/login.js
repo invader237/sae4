@@ -23,7 +23,6 @@ async function authentifier() {
         const errorMessage = document.getElementById("error");
         errorMessage.innerText = error.data.message;
         errorMessage.attributes.removeNamedItem("hidden");
-
     });
 }
 
