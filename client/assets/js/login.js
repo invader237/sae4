@@ -18,7 +18,7 @@ async function authentifier() {
         if (response.status === 200) {
             localStorage.setItem("authToken", response.data.token);
             alert("Vous êtes connecté");
-            window.location.href = "/";
+            window.location.href = "/pages/profil.html";
         }
         else {
             document.getElementById("error").innerText = response.data.message
