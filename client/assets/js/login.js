@@ -13,7 +13,8 @@ form.addEventListener("submit", (event) => {
 async function authentifier() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    await login(email, password).then((response) => {
+    const hashPassword = sha256(password);
+    await login(email, hashPassword).then((response) => {
         if (response.status === 200) {
             localStorage.setItem("authToken", response.data.token);
             window.location.href = "/pages/profil.html";
