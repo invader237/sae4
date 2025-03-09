@@ -40,4 +40,31 @@ class ProductController {
             echo json_encode(["message" => "Produit non trouvé."]);
         }
     }
+
+    public static function getSizesByProductId($id) {
+        header('Content-Type: application/json');
+
+        $sizes = ProductService::getSizesByProductId($id);
+        if ($sizes) {
+            $sizesArray = array_map(fn($size) => $size->toArray(), $sizes);
+            echo json_encode(['data'=> $sizesArray], JSON_UNESCAPED_UNICODE);
+        } else {
+            
+            http_response_code(404);
+            echo json_encode(["message" => "Produit non trouvé."]);
+        }
+    }
+
+    public static function getColorsByProductId(int $id) {
+        header('Content-Type: application/json');
+
+        $colors = ProductService::getColorsByProductId($id);
+        if ($colors) {
+            $colorsArray = array_map(fn($color) => $color->toArray(), $colors);
+            echo json_encode(['data'=> $colorsArray], JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(404);
+            echo json_encode(["message" => "Produit non trouvé."]);
+        }
+    }
 }
