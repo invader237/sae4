@@ -1,19 +1,34 @@
-<div>
-<form id="loginForm">
+<!DOCTYPE html>
+<html lang="fr">
 
-    <label for="email">Email</label>
-    <input required type="email" id="email" name="email" placeholder="Saisir votre email" maxlength="20">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
 
-    <label for="motdepasse">Mot de passe :</label>
-    <input required type="password" id="password" name="password" placeholder="Saisir votre mot de passe" maxlength="20">
+<body>
+    <form id="loginForm">
 
-    <p id="MessageErreur">Message d'erreur</p>
+        <label for="email">Email</label>
+        <input required type="email" id="email" name="email" placeholder="Saisir votre email" maxlength="20">
 
-    <a href="#/register" class="form_button">Créer un compte</a>
-    <input type="submit" value="Connexion" class="form_button">
-</form>
-<span id="error">
-</span>
-</div>
+        <label for="motdepasse">Mot de passe :</label>
+        <input required type="password" id="password" name="password" placeholder="Saisir votre mot de passe"
+            maxlength="20">
 
-<script type="module" src="assets/js/login.js"></script>
+        <p id="MessageErreur">Message d'erreur</p>
+
+        <a href="/pages/register.html" class="form_button">Créer un compte</a>
+        <input type="submit" value="Connexion" class="form_button">
+    </form>
+    <span id="error">
+    </span>
+    </div>
+</body>
+
+<script type="module" src="/assets/js/login.js"></script>
+
+</html>

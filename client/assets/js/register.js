@@ -20,7 +20,7 @@ async function registerUser() {
     await register(nom, prenom, date_naissance, email, mdp, id_civilite).then((response) => {
         if (response) {
             alert("Vous êtes inscrit");
-            window.location.href = "#/login";
+            window.location.href = "/pages/login.html";
         }
         else {
             document.getElementById("MessageErreur").innerText = response.data.message;

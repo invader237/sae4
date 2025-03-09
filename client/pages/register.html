@@ -1,33 +1,49 @@
-<form id="registerForm">
-    <label for="nom">Nom : </label>
-    <input required type="text" id="nom" name="nom" placeholder="Saisir votre nom ici" maxlength="40">
+<!DOCTYPE html>
+<html lang="fr">
 
-    <label for="prenom">Prénom : </label>
-    <input required type="text" id="prenom" name="prenom" placeholder="Saisir votre prénom ici" maxlength="20">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
 
-    <label for="login">Login : </label>
-    <input required type="text" id="login" name="login" placeholder="Saisir votre login ici" maxlength="30">
+<body>
 
-    <label for="mdp">Mot de passe : </label>
-    <input required type="password" id="mdp" name="mdp" placeholder="Saisir votre mot de passe ici" maxlength="30">
-    <span id="mdpErreur1">Le mot de passe doit contenir au moins 8 caractères</span>
-    <span id="mdpErreur2">Le mot de passe doit contenir au moins un majuscule</span>
-    <span id="mdpErreur3">Le mot de passe doit contenir au moins un minuscule</span>
-    <span id="mdpErreur4">Le mot de passe doit contenir au moins un caractère spéciale</span>
-    <span id="mdpErreur5">Le mot de passe doit contenir au moins un nombre</span>
+    <form id="registerForm">
+        <label for="nom">Nom : </label>
+        <input required type="text" id="nom" name="nom" placeholder="Saisir votre nom ici" maxlength="40">
 
-    <label for="mel">Mail : </label>
-    <input required type="text" id="mel" name="mel" placeholder="Saisir votre adresse mel ici" maxlength="100">
-    <span id="melErreur"></span> </br>
+        <label for="prenom">Prénom : </label>
+        <input required type="text" id="prenom" name="prenom" placeholder="Saisir votre prénom ici" maxlength="20">
 
-    <label for="date_naissance">Date de naissance : </label>
-    <input required type="date" id="date_naissance" name="date_naissance" value="">
+        <label for="login">Login : </label>
+        <input required type="text" id="login" name="login" placeholder="Saisir votre login ici" maxlength="30">
 
-    <br>
+        <label for="mdp">Mot de passe : </label>
+        <input required type="password" id="mdp" name="mdp" placeholder="Saisir votre mot de passe ici" maxlength="30">
+        <span id="mdpErreur1">Le mot de passe doit contenir au moins 8 caractères</span>
+        <span id="mdpErreur2">Le mot de passe doit contenir au moins un majuscule</span>
+        <span id="mdpErreur3">Le mot de passe doit contenir au moins un minuscule</span>
+        <span id="mdpErreur4">Le mot de passe doit contenir au moins un caractère spéciale</span>
+        <span id="mdpErreur5">Le mot de passe doit contenir au moins un nombre</span>
 
-    <input type="submit" name="valider" value="S'inscrire" class="form_button">
+        <label for="mel">Mail : </label>
+        <input required type="text" id="mel" name="mel" placeholder="Saisir votre adresse mel ici" maxlength="100">
+        <span id="melErreur"></span> </br>
 
-    <p id="MessageErreur">Message d'erreur</p>
-</form>
+        <label for="date_naissance">Date de naissance : </label>
+        <input required type="date" id="date_naissance" name="date_naissance" value="">
 
-<script type="module" src="assets/js/register.js"></script>
+        <br>
+
+        <input type="submit" name="valider" value="S'inscrire" class="form_button">
+
+        <p id="MessageErreur">Message d'erreur</p>
+    </form>
+
+    <script type="module" src="/assets/js/register.js"></script>
+</body>
+
+</html>
