@@ -6,7 +6,7 @@ class Product {
     private $prix;
     private $url_image;
     private $id_categorie;
-    private $sizes = [];
+    private $tailles = [];
     private $couleurs = [];
 
     public function __construct($id_produit, $designation, $description, $prix, $url_image, $id_categorie) {
@@ -42,6 +42,10 @@ class Product {
         return $this->id_categorie;
     }
 
+    public function getTailles(): array {
+        return $this->tailles;
+    }
+
     public function getCouleurs(): array {
         return $this->couleurs;
     }
@@ -70,12 +74,8 @@ class Product {
         $this->id_categorie = $id_categorie;
     }
 
-    public function getSizes(): array {
-        return $this->sizes;
-    }
-
-    public function setSizes(array $sizes): void {
-        $this->sizes = $sizes;
+    public function setTailles(array $tailles): void {
+        $this->tailles = $tailles;
     }
 
     public function setCouleurs(array $couleurs): void {
@@ -83,12 +83,10 @@ class Product {
     }
 
     public function toArray() {
-        $sizesArray = array_map(function($size) {
-            return [
-                "id_taille" => $size->getId(),
-                "libelle" => $size->getLibelle()
-            ];
-        }, $this->getSizes());
+        $sizesArray = [];
+        foreach ($this->getTailles() as $taille) {
+            $sizesArray[] = $taille->toArray();
+        }
         $colorsArray = [];
         foreach ($this->getCouleurs() as $couleur) {
             $colorsArray[] = $couleur->toArray();
@@ -101,7 +99,7 @@ class Product {
             "prix"         => $this->getPrix(),
             "url_image"    => $this->getUrl_image(),
             "id_categorie" => $this->getId_categorie(),
-            "sizes"        => $sizesArray,
+            "tailles"      => $sizesArray,
             "couleurs"     => $colorsArray
         ];
     }
