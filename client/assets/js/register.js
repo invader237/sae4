@@ -64,8 +64,10 @@ async function registerUser() {
         errorStatus = true;
     }
 
+    const hashPassword = sha256(mdp);
+
     if (!errorStatus) {
-        await register(nom, prenom, date_naissance, email, mdp, id_civilite).then((response) => {
+        await register(nom, prenom, date_naissance, email, hashPassword, id_civilite).then((response) => {
             if (response) {
                 alert("Vous êtes inscrit");
                 window.location.href = "/pages/login.html";
