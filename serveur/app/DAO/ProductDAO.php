@@ -15,7 +15,9 @@ class ProductDAO {
 
         $products = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $products[] = new Product($row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']);
+            $product = new Product($row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']);
+            $product->setSizes($this->getSizesByProductId($row['id_produit']));
+            $products[] = $product;
         }
         
         return $products;

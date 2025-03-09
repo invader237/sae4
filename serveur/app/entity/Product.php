@@ -6,6 +6,7 @@ class Product {
     private $prix;
     private $url_image;
     private $id_categorie;
+    private $sizes = [];
 
     public function __construct($id_produit, $designation, $description, $prix, $url_image, $id_categorie) {
         $this->id_produit = $id_produit;
@@ -64,14 +65,30 @@ class Product {
         $this->id_categorie = $id_categorie;
     }
 
+    public function getSizes(): array {
+        return $this->sizes;
+    }
+
+    public function setSizes(array $sizes): void {
+        $this->sizes = $sizes;
+    }
+
     public function toArray() {
+        $sizesArray = array_map(function($size) {
+            return [
+                "id_taille" => $size->getId(),
+                "libelle" => $size->getLibelle()
+            ];
+        }, $this->getSizes());
+
         return [
             "id_produit"   => $this->getId_produit(),
             "designation"  => $this->getDesignation(),
             "description"  => $this->getDescription(),
             "prix"         => $this->getPrix(),
             "url_image"    => $this->getUrl_image(),
-            "id_categorie" => $this->getId_categorie()
+            "id_categorie" => $this->getId_categorie(),
+            "sizes"        => $sizesArray
         ];
     }
 }
