@@ -8,7 +8,7 @@ class Size {
         $this->libelle = $libelle;
     }
 
-    public function getId(): int {
+    public function getId_taille(): int {
         return $this->id_taille;
     }
 
@@ -22,5 +22,12 @@ class Size {
 
     public function setLibelle(string $libelle) {
         $this->libelle = $libelle;
+    }
+
+    public function toArray() {
+        return [
+            "id_taille"   => $this->getId_taille(),
+            "libelle"  => $this->getLibelle()
+        ];
     }
 }
