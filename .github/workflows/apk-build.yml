@@ -15,7 +15,7 @@ jobs:
 
       - name: Build APK with Docker
         run: |
-          docker run -it --rm \
+          docker run --rm \
             -v ${{ github.workspace }}/client:/opt/src \
             hamdifourati/cordova-android-builder bash -c "
             cd /opt/src &&
