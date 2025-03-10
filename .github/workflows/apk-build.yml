@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: sae4
 
     steps:
       - name: Checkout repository
