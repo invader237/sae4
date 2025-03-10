@@ -24,7 +24,7 @@ class ColorDAO {
     public function getColorById(int $id): ?Color {
         $stmt = $this->pdo->prepare('SELECT * FROM COULEUR WHERE id_couleur = :id');
         $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row === false) {
             return null;
         }

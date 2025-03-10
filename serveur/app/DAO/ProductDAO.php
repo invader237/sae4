@@ -40,18 +40,12 @@ class ProductDAO {
                       JOIN TAILLE ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille";
         }
 
-<<<<<<< HEAD
         $conditions = [];
         
         if ($search) {
             $conditions[] = "CONCAT(designation, ' ', description, ' ', CATEGORIE.libelle) LIKE :search";
             $params[':search'] = "%$search%";
         }
-=======
-        $product = new Product($row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']);
-        $product->setTailles($this->getSizesByProductId($id));
-        $product->setCouleurs($this->getColorsByProductId($id));
->>>>>>> 3e58bb7 (:sparkles:(productsDetails): implement logic to retrieve colors associated to a product)
 
         if ($color) {
             $conditions[] = "COULEUR.libelle = :couleur";
