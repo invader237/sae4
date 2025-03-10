@@ -2,6 +2,11 @@ name: Build Cordova APK (Manual)
 
 on:
   workflow_dispatch:  # Déclenchement manuel
+  inputs:
+    version:
+      description: 'Version de l''application'
+      required: true
+      default: '1.0.0'
 
 jobs:
   build:
@@ -37,7 +42,7 @@ jobs:
           echo ${{ secrets.TOKEN }}
           echo ${{ secrets.GITHUB_TOKEN }}
           mkdir -p apk
-          echo "Hello World" > apk/hello.apk
+          echo "Hello World" > apk/hello-world-${{ github.event.inputs.version }}.apk
 
       - name: Configure Git login
         run: |
@@ -47,7 +52,7 @@ jobs:
       - name: Commit and push APK
         run: |
           git add apk/*.apk
-          git commit -m ":rocket:(APK): Build APK"
+          git commit -m ":rocket:(APK): Build APK version ${{ github.event.inputs.version }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
