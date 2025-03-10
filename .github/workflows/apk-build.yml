@@ -29,10 +29,13 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/apk
           find client/platforms/android/app/build/outputs/apk/ -name "*.apk" -exec cp {} $GITHUB_WORKSPACE/apk/ \;
 
+      - name: Configure Git login
+        run: |
+          git config --global user.email "${{ secrets.GITHUB_USERNAME }}@users.noreply.github.com"
+          git config --global user.name "${{ secrets.GITHUB_USERNAME }}"
+
       - name: Commit and push APK
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
           git add apk/*.apk
           git commit -m ":rocket:(APK): Build APK"
           git push
