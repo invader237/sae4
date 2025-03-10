@@ -131,4 +131,3 @@ class PanierDAO {
         return $stmt->execute(['id_utilisateur' => $id_utilisateur]);
     }
 }
-?>
