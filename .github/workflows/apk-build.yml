@@ -51,6 +51,7 @@ jobs:
 
       - name: Commit and push APK
         run: |
+          rename apk/app-debug.apk apk/pmdn-${{ github.event.inputs.version }}.apk
           git add apk/pmdn-${{ github.event.inputs.version }}.apk
           git commit -m ":rocket:(APK): Build APK version ${{ github.event.inputs.version }}"
           git push
