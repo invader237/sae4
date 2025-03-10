@@ -24,7 +24,7 @@ class SizeDAO {
     public function getSizeById(int $id): ?Size {
         $stmt = $this->pdo->prepare('SELECT * FROM TAILLE WHERE id_taille = :id');
         $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row === false) {
             return null;
         }
