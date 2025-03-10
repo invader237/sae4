@@ -21,29 +21,29 @@ jobs:
         with:
           persist-credentials: true 
 
-#      - name: Build APK with Docker
-#        run: |
-#          docker run --rm \
-#            -v ${{ github.workspace }}/client:/opt/src \
-#            hamdifourati/cordova-android-builder bash -c "
-#            cd /opt/src &&
-#            cordova platform add android &&
-#            cordova requirements &&
-#            cordova build
-#          "
-#
-#      - name: Move APK to root directory
-#        run: |
-#          mkdir -p $GITHUB_WORKSPACE/apk
-#          find client/platforms/android/app/build/outputs/apk/ -name "*.apk" -exec cp {} $GITHUB_WORKSPACE/apk/ \;
-#      
-      - name: temp
+      - name: Check if version apk exists with same version
         run: |
-          echo ${{ secrets.TOKEN }}
-          echo ${{ secrets.GITHUB_TOKEN }}
-          mkdir -p apk
-          echo "Hello World" > apk/hello-world-${{ github.event.inputs.version }}.apk
+          if [ -f apk/pmdn-${{ github.event.inputs.version }}.apk ]; then
+            echo "APK version ${{ github.event.inputs.version }} already exists"
+            exit 1
+          fi
 
+      - name: Build APK with Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/client:/opt/src \
+            hamdifourati/cordova-android-builder bash -c "
+            cd /opt/src &&
+            cordova platform add android &&
+            cordova requirements &&
+            cordova build
+          "
+
+      - name: Move APK to root directory
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/apk
+          find client/platforms/android/app/build/outputs/apk/ -name "*.apk" -exec cp {} $GITHUB_WORKSPACE/apk/ \;
+      
       - name: Configure Git login
         run: |
           git config --global user.email "${{ secrets.EMAIL }}"
@@ -51,7 +51,7 @@ jobs:
 
       - name: Commit and push APK
         run: |
-          git add apk/*.apk
+          git add apk/pmdn-${{ github.event.inputs.version }}.apk
           git commit -m ":rocket:(APK): Build APK version ${{ github.event.inputs.version }}"
           git push
         env:
