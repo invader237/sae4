@@ -16,11 +16,15 @@ class ColorController {
         }
     }
 
-    public static function getColorById($id) {
+    public static function getColorById() {
         header('Content-Type: application/json');
 
-        $color = ColorService::getColorById($id);
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
 
+        $id = $data['id'] ?? null;
+
+        $color = ColorService::getColorById($id);
         if ($color) {
             echo json_encode(["data" => $color->toArray()], JSON_UNESCAPED_UNICODE);
         } else {

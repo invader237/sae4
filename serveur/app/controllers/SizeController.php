@@ -16,11 +16,15 @@ class SizeController {
         }
     }
 
-    public static function getSizeById($id) {
+    public static function getSizeById() {
         header('Content-Type: application/json');
 
-        $size = SizeService::getSizeById($id);
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
 
+        $id = $data['id'] ?? null;
+
+        $size = SizeService::getSizeById($id);
         if ($size) {
             echo json_encode(["data" => $size->toArray()], JSON_UNESCAPED_UNICODE);
         } else {
