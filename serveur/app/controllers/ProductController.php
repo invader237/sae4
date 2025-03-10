@@ -28,11 +28,15 @@ class ProductController {
         }
     }
 
-    public static function getProductById($id) {
+    public static function getProductById() {
         header('Content-Type: application/json');
 
-        $product = ProductService::getProductById($id);
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
 
+        $id = $data['id'] ?? null;
+
+        $product = ProductService::getProductById($id);
         if ($product) {
             echo json_encode(["data" => $product->toArray()], JSON_UNESCAPED_UNICODE);
         } else {
@@ -41,8 +45,13 @@ class ProductController {
         }
     }
 
-    public static function getSizesByProductId($id) {
+    public static function getSizesByProductId() {
         header('Content-Type: application/json');
+
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $id = $data['id'] ?? null;
 
         $sizes = ProductService::getSizesByProductId($id);
         if ($sizes) {
@@ -55,8 +64,13 @@ class ProductController {
         }
     }
 
-    public static function getColorsByProductId(int $id) {
+    public static function getColorsByProductId() {
         header('Content-Type: application/json');
+
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $id = $data['id'] ?? null;
 
         $colors = ProductService::getColorsByProductId($id);
         if ($colors) {
