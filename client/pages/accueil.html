@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="/assets/js/componentsLoader.js"></script>
 </head>
 
 <body>
-
-    <nav>
-        <a href="/pages/accueil.html">Accueil</a>
-        <a href="/pages/login.html">Connexion</a>
-        <a href="/pages/register.html">Inscription</a>
-    </nav>
+    <header id="printHeader"></header>
+    <footer id="printFooter"></footer>
 </body>
+<script>
+    componentsLoader("/components/header.html", "printHeader");
+    componentsLoader("/components/footer.html", "printFooter");
+</script>
 
 </html>
