@@ -32,6 +32,7 @@ jobs:
 #      
       - name: temp
         run: |
+          mkdir -p apk
           echo "Hello World" > apk/hello.apk
 
       - name: Configure Git login
