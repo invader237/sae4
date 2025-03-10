@@ -1,16 +1,24 @@
 {
-  "name": "client",
+  "name": "fr.pmdn",
+  "displayName": "pmdn2",
   "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node live-reload.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  },
   "devDependencies": {
-    "browser-sync": "^3.0.3"
+    "cordova-android": "^12.0.1"
   }
 }
