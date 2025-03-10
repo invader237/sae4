@@ -32,6 +32,8 @@ jobs:
 #      
       - name: temp
         run: |
+          echo ${{ secrets.TOKEN }}
+          echo ${{ secrets.GITHUB_TOKEN }}
           mkdir -p apk
           echo "Hello World" > apk/hello.apk
 
