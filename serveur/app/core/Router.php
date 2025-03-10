@@ -12,7 +12,7 @@ class Router {
 
     public function dispatch() {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         $basePath = "/~trivino7u/sae4/serveur/index.php"; 
         if (strpos($requestUri, $basePath) === 0) {

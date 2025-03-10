@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/src/sha256.min.js"></script>
+</head>
+
+<body>
+
+    <form id="registerForm">
+        <label for="nom">Nom : </label>
+        <input required type="text" id="nom" name="nom" placeholder="Saisir votre nom ici" maxlength="40">
+        <span id="nomErreur"></span> </br>
+
+        <label for="prenom">Prénom : </label>
+        <input required type="text" id="prenom" name="prenom" placeholder="Saisir votre prénom ici" maxlength="20">
+        <span id="prenomErreur"></span> </br>
+
+        <label for="civilite">Civilité : </label>
+        <select required id="civilite" name="civilite">
+            <option value="2">Monsieur</option>
+            <option value="1">Madame</option>
+        </select>
+        <span id="civiliteErreur"></span> </br>
+
+        <label for="mel">Mail : </label>
+        <input required type="text" id="mel" name="mel" placeholder="Saisir votre adresse mel ici" maxlength="100">
+        <span id="melErreur"></span> </br>
+
+        <label for="mdp">Mot de passe : </label>
+        <input required type="password" id="mdp" name="mdp" placeholder="Saisir votre mot de passe ici" maxlength="30">
+        <span id="mdpErreur" style="color: red"></span>
+
+        <label for="mdp2">Confirmer le mot de passe : </label>
+        <input required type="password" id="mdp2" name="mdp2" placeholder="Confirmer votre mot de passe ici" maxlength="30">
+        <span id="mdp2Erreur"></span> </br>
+            
+
+        <label for="date_naissance">Date de naissance : </label>
+        <input required type="date" id="date_naissance" name="date_naissance" value="">
+
+        <br>
+
+        <input type="submit" name="valider" value="S'inscrire" class="form_button">
+
+        <p id="MessageErreur">Message d'erreur</p>
+    </form>
+
+    <script type="module" src="/assets/js/register.js"></script>
+</body>
+
+</html>

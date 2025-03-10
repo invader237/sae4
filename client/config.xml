@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="fr.pmdn" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>pmdn2</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+        <icon src="res/android/drawable-ldpi/logo.png" density="ldpi" />
+        <icon src="res/android/drawable-mdpi/logo.png" density="mdpi" />
+        <icon src="res/android/drawable-hdpi/logo.png" density="hdpi" />
+        <icon src="res/android/drawable-xhdpi/logo.png" density="xhdpi" />
+        <icon src="res/android/drawable-xxhdpi/logo.png" density="xxhdpi" />
+        <icon src="res/android/drawable-xxxhdpi/logo.png" density="xxxhdpi" />
+    <allow-intent href="https://*/*" />
+</widget>
