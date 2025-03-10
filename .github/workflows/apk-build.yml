@@ -1,7 +1,7 @@
 name: Build Cordova APK (Manual)
 
 on:
-  workflow_dispatch:  # Déclenchement manuel
+  workflow_dispatch: 
     inputs:
       version:
         description: 'Version de l''application'
