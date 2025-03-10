@@ -1,195 +1,107 @@
 <?php
-require_once('./app/entity/Panier.php');
+require_once '../entity/Panier.php';
 
-async function getPanier(id_utilisateur) {
-    return await fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/getPanier.php", {
-            method: "POST",
-            body: new URLSearchParams({
-                id_utilisateur: id_utilisateur,
-            }),
-        })
-        .then(reponse => reponse.json());
-}
+class PanierDAO {
+    private $pdo;
 
-function affichePanier(panier, qte, taille, couleur, couleurId, tailleId) {
-    const prix = document.getElementById("prixTotal");
-    const panierDiv = document.createElement("div");
-    panierDiv.classList.add("panierElement");
-    const id = `${CONTENU_PANIER.id_produit}|${CONTENU_PANIER.id_couleur}|${CONTENU_PANIER.id_taille}`
-    panierDiv.innerHTML = `
-        <center><img id="img${id}" src="https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/img/articles/${panier.path_img}" alt="image du produit"></center>
-        <p>${panier.nom_prod}</p>
-        <div id="select">
-            <select  id="couleur${id}"></select>
-            ${casNulltaill(id, panier.id_tail)}
-        </div> 
-        <center>
-            <div id="input_qte">Quantité : <input class="qte" id="${id}" type="number" value="${qte}"></div>
-            <p id="prix">Prix : ${Math.round(panier.prix_unit * qte * 100) / 100}€</p>
-            <div id="button">
-                <button class="mod form_button" id="${id}">Modifier</button>
-                <button class="del form_button" id="${id}">Supprimer</button>
-            </div>
-        </center>
-        `;
-    document.getElementById("panier").appendChild(panierDiv);
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
+    }
 
-    delButton(id);
-    modifButton(id);
-    rempliSelect(document.getElementById(`couleur${id}`), couleur, couleurId, CONTENU_PANIER.nom_couleur);
-    CONTENU_PANIER.id_taille !== 17 ? rempliSelect(document.getElementById(`taille${id}`), taille, tailleId, panier.nom_tail) : casNulltaill(id, panier.id_tail);
-    prix.innerHTML = (Math.round((parseFloat(prix.innerHTML) + panier.prix_unit * qte) * 100) / 100);
-    document.getElementById(`couleur${id}`).addEventListener("change", (e) => {
-        getProduit(panier.id_prod).then((response) => {
-            response.json().then(BDDproduit => {
-                BDDproduit.data.forEach((element) => {
-                    if (element.nom_col === e.target.value) {
-                        document.getElementById(`img${id}`).src = `https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/img/articles/${element.path_img}`
-                    }
-                })
-            })
-        });
-    });
-}
+    public function getPanier($id_utilisateur) {
+        $sql = "SELECT cp.id_produit, p.designation, p.description, p.prix, p.url_image, p.id_categorie, 
+                       cp.qte, cp.id_taille, cp.id_couleur
+                FROM PANIER pa
+                JOIN CONTENU_PANIER cp ON pa.id_panier = cp.id_panier
+                JOIN PRODUIT p ON cp.id_produit = p.id_produit
+                WHERE pa.id_utilisateur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_utilisateur]);
+        $panier = [];
 
-function findId(id, array) {
-    let test = null;
-    array.forEach((element) => {
-        if (element.id == id) {
-            test = element;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $panier[] = [
+                'produit' => new Product(
+                    $row['id_produit'],
+                    $row['designation'],
+                    $row['description'],
+                    $row['prix'],
+                    $row['url_image'],
+                    $row['id_categorie']
+                ),
+                'qte' => $row['qte'],
+                'id_taille' => $row['id_taille'],
+                'id_couleur' => $row['id_couleur']
+            ];
         }
-    });
-    return test;
-}
 
-function delButton(id) {
-    const test = findId(id, document.querySelectorAll(".del"))
-    test.addEventListener("click", (e) => {
-        const id_prod = e.target.id.split("|")[0];
-        const id_col = e.target.id.split("|")[1];
-        const id_tail = e.target.id.split("|")[2];
-        fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/delPanier.php", {
-            method: "POST",
-            body: new URLSearchParams({
-                id_us: id_us,
-                id_prod: id_prod,
-                id_col: id_col,
-                id_tail: id_tail,
-            }),
-        }).then((response) => {
-            response.json().then((json) => {
-                if (json.status !== "success") {
-                    console.log("suppression échouée");
-                    return;
-                }
-                console.log("suppression réussie");
-                appelPanier();
-            });
-        });
-    });
-}
+        return $panier;
+    }
 
-function modifButton(id) {
-    const test = findId(id, document.querySelectorAll(".mod"))
-    test.addEventListener("click", (e) => {
-        const id_prod = e.target.id.split("|")[0];
-        const id_col = e.target.id.split("|")[1];
-        const id_tail = e.target.id.split("|")[2];
-        const qte_pan = document.getElementById(id).value;
-        let new_id_col = null
-        let new_id_tail = null
-        document.getElementById(`couleur${id}`).querySelectorAll("option").forEach((element) => {
-            if (element.selected) {
-                new_id_col = element.id;
-            }
-        });
-        if (document.getElementById(`taille${id}`) === null) {
-            new_id_tail = 17
+    // Ajout ou mise à jour d'un panier
+    public function addProduitPanier($id_utilisateur, $id_produit, $qte, $id_taille, $id_couleur) {
+        // Vérifier si un panier existe déjà pour l'utilisateur
+        $sql = "SELECT id_panier FROM PANIER WHERE id_utilisateur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_utilisateur]);
+        $panier = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$panier) {
+            // Création de panier si l'utilisateur n'en a pas
+            $sql = "INSERT INTO PANIER (id_utilisateur) VALUES (?)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$id_utilisateur]);
+            $id_panier = $this->pdo->lastInsertId();
         } else {
-            document.getElementById(`taille${id}`).querySelectorAll("option").forEach((element) => {
-                if (element.selected) {
-                    new_id_tail = element.id;
-                }
-            });
+            $id_panier = $panier['id_panier'];
         }
-        fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/setPanier.php", {
-            method: "POST",
-            body: new URLSearchParams({
-                id_us: id_us,
-                id_prod: id_prod,
-                id_col: id_col,
-                id_tail: id_tail,
-                qte_pan: qte_pan,
-                new_id_col: new_id_col,
-                new_id_tail: new_id_tail,
-            }),
-        }).then((response) => {
-            response.json().then((json) => {
-                if (json.status !== "success") {
-                    alert("modif échouée");
-                    appelPanier();
-                    return;
-                }
 
-                console.log("modif réussie");
-                document.getElementById("panier").innerHTML = "";
-                appelPanier();
-            });
-        });
-    });
+        // Vérification de présence du produit dans le panier
+        $sql = "SELECT qte FROM CONTENU_PANIER WHERE id_panier = ? AND id_produit = ? AND id_taille = ? AND id_couleur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_panier, $id_produit, $id_taille, $id_couleur]);
+        $contenu = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($contenu) {
+            // Mise à jour de la quantité si le produit est déjà dans le panier
+            $nouvelle_qte = $contenu['qte'] + $qte;
+            $sql = "UPDATE CONTENU_PANIER SET qte = ? WHERE id_panier = ? AND id_produit = ? AND id_taille = ? AND id_couleur = ?";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([$nouvelle_qte, $id_panier, $id_produit, $id_taille, $id_couleur]);
+        } else {
+            // Sinon ajout d'un nouveau produit au panier
+            $sql = "INSERT INTO CONTENU_PANIER (id_panier, id_produit, qte, id_taille, id_couleur) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([$id_panier, $id_produit, $qte, $id_taille, $id_couleur]);
+        }
+    }
+
+    // Modification de la quantité d'un produit dans le panier
+    public function updateQuantiteProduit($id_utilisateur, $id_produit, $qte, $id_taille, $id_couleur) {
+        $sql = "UPDATE CONTENU_PANIER cp
+                JOIN PANIER pa ON cp.id_panier = pa.id_panier
+                SET cp.qte = ?
+                WHERE pa.id_utilisateur = ? AND cp.id_produit = ? AND cp.id_taille = ? AND cp.id_couleur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$qte, $id_utilisateur, $id_produit, $id_taille, $id_couleur]);
+    }
+
+    // Suppression d'un produit du panier
+    public function deleteProduitPanier($id_utilisateur, $id_produit, $id_taille, $id_couleur) {
+        $sql = "DELETE cp FROM CONTENU_PANIER cp
+                JOIN PANIER pa ON cp.id_panier = pa.id_panier
+                WHERE pa.id_utilisateur = ? AND cp.id_produit = ? AND cp.id_taille = ? AND cp.id_couleur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id_utilisateur, $id_produit, $id_taille, $id_couleur]);
+    }
+
+    // Vidage du panier d'un utilisateur
+    public function clearPanier($id_utilisateur) {
+        $sql = "DELETE cp FROM CONTENU_PANIER cp
+                JOIN PANIER pa ON cp.id_panier = pa.id_panier
+                WHERE pa.id_utilisateur = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id_utilisateur]);
+    }
 }
-
-.getElementById("clear").addEventListener("click", () => {
-    fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/clearPanier.php", {
-        method: "POST",
-        body: new URLSearchParams({
-            id_us: id_us,
-        }),
-    }).then((response) => {
-        response.json().then((data) => {
-            if (data.status == "success") {
-                console.log("suppression réussie");
-                appelPanier();
-            } else {
-                console.log("suppression échouée");
-            }
-        });
-    });
-});
-
-document.getElementById("payer").addEventListener("click", () => {
-    fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/payer.php", {
-        method: "POST",
-        body: new URLSearchParams({
-            id_us: id_us,
-        }),
-    }).then((reponse) => {
-        reponse.json().then((data) => {
-            if (data.status == "success") {
-                console.log("paiement réussi");
-                fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/clearPanier.php", {
-                    method: "POST",
-                    body: new URLSearchParams({
-                        id_us: id_us,
-                    }),
-                }).then((response) => {
-                    response.json().then((data) => {
-                        if (data.status == "success") {
-                            console.log("suppression réussie");
-                            appelPanier();
-                            window.location.href = "accueil.html";
-                        } else {
-                            console.log("suppression échouée");
-                        }
-                    });
-                });
-
-            } else {
-                console.log("paiement échoué");
-            }
-        })
-    });
-
-});
-
 ?>
