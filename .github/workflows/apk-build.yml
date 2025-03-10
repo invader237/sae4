@@ -1,0 +1,40 @@
+name: Build Cordova APK (Manual)
+
+on:
+  workflow_dispatch:  # Déclenchement manuel
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false 
+
+      - name: Build APK with Docker
+        run: |
+          docker run -it --rm \
+            -v ${{ github.workspace }}/client:/opt/src \
+            hamdifourati/cordova-android-builder bash -c "
+            cd /opt/src &&
+            cordova platform add android &&
+            cordova requirements &&
+            cordova build
+          "
+
+      - name: Move APK to root directory
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/apk
+          find client/platforms/android/app/build/outputs/apk/ -name "*.apk" -exec cp {} $GITHUB_WORKSPACE/apk/ \;
+
+      - name: Commit and push APK
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add apk/*.apk
+          git commit -m ":rocket:(APK): Build APK"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
