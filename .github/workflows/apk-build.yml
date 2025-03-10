@@ -2,11 +2,11 @@ name: Build Cordova APK (Manual)
 
 on:
   workflow_dispatch:  # Déclenchement manuel
-  inputs:
-    version:
-      description: 'Version de l''application'
-      required: true
-      default: '1.0.0'
+    inputs:
+      version:
+        description: 'Version de l''application'
+        required: true
+        default: '1.0.0'
 
 jobs:
   build:
