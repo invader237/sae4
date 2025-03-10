@@ -1,6 +1,8 @@
 <?php
 require_once('./app/core/Connexion.php');
 require_once('./app/entity/Product.php');
+require_once('./app/entity/Size.php');
+require_once('./app/entity/Color.php');
 
 class ProductDAO {
     private $pdo;
