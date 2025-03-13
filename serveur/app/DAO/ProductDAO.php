@@ -10,7 +10,7 @@ class ProductDAO {
     }
 
     public function getAllProducts(): array {
-        $stmt = $this->pdo->prepare('SELECT * FROM PRODUIT');
+        $stmt = $this->pdo->prepare('SELECT * FROM PRODUIT, COULEUR_PRODUIT where COULEUR_PRODUIT.id_produit = PRODUIT.id_produit GROUP BY PRODUIT.id_produit;');
         $stmt->execute();
 
         $products = [];
