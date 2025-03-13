@@ -28,15 +28,14 @@ class ProductController {
         }
     }
 
-    public static function getProductById() {
+    public static function getProductByIdAndColorAndSize() {
         header('Content-Type: application/json');
 
-        $body = file_get_contents('php://input');
-        $data = json_decode($body, true); 
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+        $color = $_GET['color'] ?? $_POST['color'] ?? null;
+        $size = $_GET['size'] ?? $_POST['size'] ?? null;
 
-        $id = $data['id'] ?? null;
-
-        $product = ProductService::getProductById($id);
+        $product = ProductService::getProductByIdAndColorAndSize($id, $color, $size);
         if ($product) {
             echo json_encode(["data" => $product->toArray()], JSON_UNESCAPED_UNICODE);
         } else {
