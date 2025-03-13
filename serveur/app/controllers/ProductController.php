@@ -5,14 +5,25 @@ class ProductController {
     public static function getAllProducts() {
         header('Content-Type: application/json');
 
-        $products = ProductService::getAllProducts();
+        $search = $_GET['search'] ?? null;  
+        $color = $_GET['color'] ?? null;
+        $size = $_GET['size'] ?? null;
 
-        if ($products) {
+        if ($search || $color || $size) {
+            $products = ProductService::searchProducts($search, $color, $size);
             $productsArray = array_map(fn($product) => $product->toArray(), $products);
             echo json_encode(["data" => $productsArray], JSON_UNESCAPED_UNICODE);
         } else {
-            http_response_code(500);
-            echo json_encode(["message" => "Une erreur interne est survenue. Veuillez réessayer plus tard."]);
+
+            $products = ProductService::getAllProducts();
+
+            if ($products) {
+                $productsArray = array_map(fn($product) => $product->toArray(), $products);
+                echo json_encode(["data" => $productsArray], JSON_UNESCAPED_UNICODE);
+            } else {
+                http_response_code(500);
+                echo json_encode(["message" => "Une erreur interne est survenue. Veuillez réessayer plus tard."]);
+            }
         }
     }
 }
