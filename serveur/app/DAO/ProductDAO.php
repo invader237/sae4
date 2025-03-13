@@ -20,4 +20,54 @@ class ProductDAO {
         
         return $products;
     }
+
+    public function searchProducts($search, $color, $size): array {
+        $sql = "SELECT * FROM PRODUIT 
+                JOIN CATEGORIE ON PRODUIT.id_categorie = CATEGORIE.id_categorie";
+
+        $params = []; 
+
+        $sql .= " JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit
+                  JOIN COULEUR ON COULEUR_PRODUIT.id_couleur = COULEUR.id_couleur";
+
+        if ($size !== null) {
+            $sql .= " JOIN TAILLE_PRODUIT ON TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
+                      JOIN TAILLE ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille";
+        }
+
+        $conditions = [];
+        
+        if ($search !== null) {
+            $conditions[] = "CONCAT(designation, ' ', description, ' ', CATEGORIE.libelle) LIKE :search";
+            $params[':search'] = "%$search%";
+        }
+
+        if ($color !== null) {
+            $conditions[] = "COULEUR.libelle = :couleur";
+            $params[':couleur'] = $color;
+        }
+
+        if ($size !== null) {
+            $conditions[] = "TAILLE.libelle = :taille";
+            $params[':taille'] = $size;
+        }
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+
+        $sql .= " GROUP BY PRODUIT.id_produit";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $products = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $products[] = new Product(
+                $row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']
+            );
+        }
+
+        return $products;
+    }
 }
