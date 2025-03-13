@@ -38,3 +38,12 @@ export const register = async (nom, prenom, date_naissance, email, mdp, id_civil
         return error.response.data;
     }
 }
+
+export const getAllProducts = async () => {
+    try {
+        const response = await axiosInstance.get("/getAllProducts");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
