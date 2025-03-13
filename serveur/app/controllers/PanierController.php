@@ -1,6 +1,5 @@
 <?php
 require_once('./app/dao/PanierDAO.php');
-require_once('./app/config/Database.php');
 
 class PanierController {
     private $panierDAO;
