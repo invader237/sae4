@@ -4,11 +4,6 @@ require_once('./app/dao/PanierDAO.php');
 class PanierController {
     private $panierDAO;
 
-    public function __construct() {
-        $db = new Database();
-        $this->panierDAO = new PanierDAO($db->getConnection());
-    }
-
     public function getPanier($id_utilisateur) {
         header('Content-Type: application/json');
         
