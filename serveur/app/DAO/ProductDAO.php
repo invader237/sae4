@@ -80,4 +80,26 @@ class ProductDAO {
 
         return $products;
     }
+
+    public function getProductByIdAndColorAndSize(int $id, int $color, int $size): ?Product {
+        $stmt = $this->pdo->prepare(
+            'SELECT * 
+            FROM PRODUIT, COULEUR_PRODUIT, TAILLE_PRODUIT 
+            WHERE PRODUIT.id_produit = :id 
+            AND COULEUR_PRODUIT.id_couleur = :couleur 
+            AND TAILLE_PRODUIT.id_taille = :taille
+            AND COULEUR_PRODUIT.id_produit = PRODUIT.id_produit 
+            AND TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
+            GROUP BY PRODUIT.id_produit'
+        );
+        $stmt->execute([
+            'id' => $id,
+            'couleur' => $color,
+            'taille' => $size
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row === false) {
+            return null;
+        }
+    }
 }
