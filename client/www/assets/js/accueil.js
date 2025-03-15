@@ -23,7 +23,7 @@ function afficherProduits(products) {
             <div class="card-body flex-grow-1 d-flex flex-column">
                 <h5 class="card-title">${product.designation}</h5>
                 <p class="card-text">${product.prix} €</p>
-                <a href="/pages/produit.html?id=${product.id_produit}" class="btn btn-primary mt-auto">Voir le produit</a>
+                <a href="../pages/produit.html?id=${product.id_produit}" class="btn btn-primary mt-auto">Voir le produit</a>
             </div>
         `;
         productDiv.appendChild(productCard);
