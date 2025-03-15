@@ -31,9 +31,9 @@ class ProductController {
     public static function getProductByIdAndColorAndSize() {
         header('Content-Type: application/json');
 
-        $id = $_GET['id'] ?? $_POST['id'] ?? null;
-        $color = $_GET['color'] ?? $_POST['color'] ?? null;
-        $size = $_GET['size'] ?? $_POST['size'] ?? null;
+        $id = $_GET['id'] ?? null;
+        $color = $_GET['color'] ?? null;
+        $size = $_GET['size'] ?? null;
 
         $product = ProductService::getProductByIdAndColorAndSize($id, $color, $size);
         if ($product) {
