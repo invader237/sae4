@@ -47,3 +47,19 @@ export const getAllProducts = async () => {
         console.error(error);
     }
 }
+
+export const getAllProductsFilter = async (search, category, color, size) => {
+    try {
+        const response = await axiosInstance.get("/getAllProducts", {
+            params: {
+                search: search,
+                category: category,
+                color: color,
+                size: size
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
