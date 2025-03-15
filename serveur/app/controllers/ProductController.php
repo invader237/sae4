@@ -43,41 +43,4 @@ class ProductController {
             echo json_encode(["message" => "Produit non trouvé."]);
         }
     }
-
-    public static function getSizesByProductId() {
-        header('Content-Type: application/json');
-
-        $body = file_get_contents('php://input');
-        $data = json_decode($body, true); 
-
-        $id = $data['id'] ?? null;
-
-        $sizes = ProductService::getSizesByProductId($id);
-        if ($sizes) {
-            $sizesArray = array_map(fn($size) => $size->toArray(), $sizes);
-            echo json_encode(['data'=> $sizesArray], JSON_UNESCAPED_UNICODE);
-        } else {
-            
-            http_response_code(404);
-            echo json_encode(["message" => "Produit non trouvé."]);
-        }
-    }
-
-    public static function getColorsByProductId() {
-        header('Content-Type: application/json');
-
-        $body = file_get_contents('php://input');
-        $data = json_decode($body, true); 
-
-        $id = $data['id'] ?? null;
-
-        $colors = ProductService::getColorsByProductId($id);
-        if ($colors) {
-            $colorsArray = array_map(fn($color) => $color->toArray(), $colors);
-            echo json_encode(['data'=> $colorsArray], JSON_UNESCAPED_UNICODE);
-        } else {
-            http_response_code(404);
-            echo json_encode(["message" => "Produit non trouvé."]);
-        }
-    }
 }
