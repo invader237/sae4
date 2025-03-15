@@ -15,12 +15,9 @@ class PanierController {
         header('Content-Type: application/json');
         
         $id_utilisateur=AuthMiddleware::getUser();
-<<<<<<< HEAD
         
         $body = file_get_contents('php://input');
         $data = json_decode($body, true);
-=======
->>>>>>> a8f4f0f (:construction: WIP)
 
         if (!isset($data['id_produit'], $data['qte'], $data['id_taille'], $data['id_couleur'])) {
             http_response_code(400);
