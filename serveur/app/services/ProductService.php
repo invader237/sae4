@@ -11,10 +11,10 @@ class ProductService {
         return $products;
     }
 
-    public static function searchProducts($search, $color, $size) {
+    public static function searchProducts($search, $color, $size, $category) {
         $db = Database::getConnection();
         $productDAO = new ProductDAO($db);
-        $products = $productDAO->searchProducts($search, $color, $size);
+        $products = $productDAO->searchProducts($search, $color, $size, $category);
         return $products;
     }
 
