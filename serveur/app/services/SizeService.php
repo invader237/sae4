@@ -4,17 +4,10 @@ require_once('./app/entity/Size.php');
 require_once('./app/core/Connexion.php');
 
 class SizeService {
-    public static function getAllSizes() {
+    public static function getSizesByProductId($id) {
         $db = Database::getConnection();
         $sizeDAO = new SizeDAO($db);
-        $sizes = $sizeDAO->getAllSizes();
+        $sizes = $sizeDAO->getSizesByProductId($id);
         return $sizes;
-    }
-
-    public static function getSizeById($id) {
-        $db = Database::getConnection();
-        $sizeDAO = new SizeDAO($db);
-        $size = $sizeDAO->getSizeById($id);
-        return $size;
     }
 }

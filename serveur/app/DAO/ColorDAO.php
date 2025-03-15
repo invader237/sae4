@@ -9,25 +9,20 @@ class ColorDAO {
         $this->pdo = $pdo;
     }
 
-    public function getAllColors(): array {
-        $stmt = $this->pdo->prepare('SELECT * FROM COULEUR');
-        $stmt->execute();
+    public function getColorsByProductId(int $id): array {
+        $stmt = $this->pdo->prepare('
+            SELECT COULEUR.id_couleur, COULEUR.libelle 
+            FROM COULEUR 
+            JOIN COULEUR_PRODUIT ON COULEUR.id_couleur = COULEUR_PRODUIT.id_couleur 
+            WHERE COULEUR_PRODUIT.id_produit = :id
+        ');
+        $stmt->execute(['id' => $id]);
 
         $colors = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $colors[] = new Color($row['id_couleur'], $row['libelle']);
         }
-        
-        return $colors;
-    }
 
-    public function getColorById(int $id): ?Color {
-        $stmt = $this->pdo->prepare('SELECT * FROM COULEUR WHERE id_couleur = :id');
-        $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row === false) {
-            return null;
-        }
-        return new Color($row['id_couleur'], $row['libelle']);
+        return $colors;
     }
 }
