@@ -17,7 +17,7 @@ async function authentifier() {
     await login(email, hashPassword).then((response) => {
         if (response.status === 200) {
             localStorage.setItem("authToken", response.data.token);
-            window.location.href = "/pages/profil.html";
+            window.location.href = "../pages/profil.html";
         }
     }).catch((error) => {
         const errorMessage = document.getElementById("error");
