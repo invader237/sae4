@@ -4,17 +4,10 @@ require_once('./app/entity/Color.php');
 require_once('./app/core/Connexion.php');
 
 class ColorService {
-    public static function getAllColors() {
+    public static function getColorsByProductId($id) {
         $db = Database::getConnection();
         $colorDAO = new ColorDAO($db);
-        $colors = $colorDAO->getAllColors();
+        $colors = $colorDAO->getColorsByProductId($id);
         return $colors;
-    }
-
-    public static function getColorById($id) {
-        $db = Database::getConnection();
-        $colorDAO = new ColorDAO($db);
-        $color = $colorDAO->getColorById($id);
-        return $color;
     }
 }
