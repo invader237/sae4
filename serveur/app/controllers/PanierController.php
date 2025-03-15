@@ -15,6 +15,8 @@ class PanierController {
 
     public static function addProduit() {
         header('Content-Type: application/json');
+        
+        $id_utilisateur=AuthMiddleware::getUser();
 
         $body = file_get_contents('php://input');
         $data = json_decode($body, true); 
