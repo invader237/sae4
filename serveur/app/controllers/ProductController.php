@@ -8,9 +8,10 @@ class ProductController {
         $search = $_GET['search'] ?? null;  
         $color = $_GET['color'] ?? null;
         $size = $_GET['size'] ?? null;
+        $category = $_GET['category'] ?? null;
 
-        if ($search || $color || $size) {
-            $products = ProductService::searchProducts($search, $color, $size);
+        if ($search || $color || $size || $category) {
+            $products = ProductService::searchProducts($search, $color, $size, $category);
             $productsArray = array_map(fn($product) => $product->toArray(), $products);
             echo json_encode(["data" => $productsArray], JSON_UNESCAPED_UNICODE);
         } else {

@@ -21,7 +21,7 @@ class ProductDAO {
         return $products;
     }
 
-    public function searchProducts($search, $color, $size): array {
+    public function searchProducts($search, $color, $size, $category): array {
         $sql = "SELECT * FROM PRODUIT 
                 JOIN CATEGORIE ON PRODUIT.id_categorie = CATEGORIE.id_categorie";
 
@@ -47,9 +47,14 @@ class ProductDAO {
             $params[':couleur'] = $color;
         }
 
-        if ($size !== null) {
+        if ($size !== null && $category !== "Bonnet") {
             $conditions[] = "TAILLE.libelle = :taille";
             $params[':taille'] = $size;
+        }
+
+        if ($category !== null) {
+            $conditions[] = "CATEGORIE.libelle = :categorie";
+            $params[':categorie'] = $category;
         }
 
         if (!empty($conditions)) {
