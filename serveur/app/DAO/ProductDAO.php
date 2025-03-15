@@ -4,10 +4,12 @@ require_once('./app/entity/Product.php');
 require_once('./app/entity/Size.php');
 require_once('./app/entity/Color.php');
 
-class ProductDAO {
+class ProductDAO
+{
     private $pdo;
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
 
@@ -18,11 +20,9 @@ class ProductDAO {
         $products = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $product = new Product($row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']);
-            $product->setTailles($this->getSizesByProductId($row['id_produit']));
-            $product->setCouleurs($this->getColorsByProductId($row['id_produit']));
             $products[] = $product;
         }
-        
+
         return $products;
     }
 
@@ -83,13 +83,15 @@ class ProductDAO {
 
     public function getProductByIdAndColorAndSize(int $id, int $color, int $size): ?Product {
         $stmt = $this->pdo->prepare(
-            'SELECT * 
-            FROM PRODUIT, COULEUR_PRODUIT, TAILLE_PRODUIT 
+            'SELECT PRODUIT.*,
+                COULEUR_PRODUIT.reduction AS reduction_couleur, 
+                TAILLE_PRODUIT.reduction AS reduction_taille
+            FROM PRODUIT
+            JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit 
+            JOIN TAILLE_PRODUIT ON TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
             WHERE PRODUIT.id_produit = :id 
             AND COULEUR_PRODUIT.id_couleur = :couleur 
             AND TAILLE_PRODUIT.id_taille = :taille
-            AND COULEUR_PRODUIT.id_produit = PRODUIT.id_produit 
-            AND TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
             GROUP BY PRODUIT.id_produit'
         );
         $stmt->execute([
@@ -101,5 +103,21 @@ class ProductDAO {
         if ($row === false) {
             return null;
         }
+
+        // Assurer que les réductions sont bien des valeurs numériques
+        $reductionCouleur = isset($row['reduction_couleur']) ? (float) $row['reduction_couleur'] : 0;
+        $reductionTaille = isset($row['reduction_taille']) ? (float) $row['reduction_taille'] : 0;
+        $prixFinal = max(0, $row['prix'] - ($reductionCouleur + $reductionTaille)); // Évite un prix négatif
+
+        $product = new Product(
+            $row['id_produit'],
+            $row['designation'],
+            $row['description'],
+            $prixFinal,
+            $row['url_image'],
+            $row['id_categorie']
+        );
+
+        return $product;
     }
 }
