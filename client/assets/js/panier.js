@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     afficherPanier();
 });
 
-function afficherPanier() {
-    fetch('PanierController.php?action=getPanier&id_utilisateur=1') // Remplace par l'ID de l'utilisateur actuel
+function afficherPanier(id_utilisateur) {
+    fetch(`PanierController.php?action=getPanier&id_utilisateur=${id_utilisateur}`) 
         .then(response => response.json())
         .then(data => {
             const panierDiv = document.getElementById('panier');
@@ -37,8 +37,8 @@ function afficherPanier() {
         .catch(error => console.error('Erreur lors du chargement du panier:', error));
 }
 
-function supprimerProduit(id_produit, id_taille, id_couleur) {
-    fetch('PanierController.php?action=deleteProduitPanier&id_utilisateur=1', { // Remplace par l'ID de l'utilisateur
+function supprimerProduit(id_utilisateur,id_produit, id_taille, id_couleur) {
+    fetch(`PanierController.php?action=deleteProduitPanier&id_utilisateur=${id_utilisateur}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_produit, id_taille, id_couleur })
@@ -46,13 +46,13 @@ function supprimerProduit(id_produit, id_taille, id_couleur) {
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
-        afficherPanier(); // Recharge le panier après suppression
+        afficherPanier();
     })
     .catch(error => console.error('Erreur lors de la suppression:', error));
 }
 
-function clearPanier() {
-    fetch('PanierController.php?action=clearPanier&id_utilisateur=1', { // Remplace par l'ID de l'utilisateur
+function clearPanier(id_utilisateur) {
+    fetch(`PanierController.php?action=clearPanier&id_utilisateur=${id_utilisateur}`, {
         method: 'POST'
     })
     .then(response => response.json())
