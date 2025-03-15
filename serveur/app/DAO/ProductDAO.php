@@ -30,29 +30,29 @@ class ProductDAO {
         $sql .= " JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit
                   JOIN COULEUR ON COULEUR_PRODUIT.id_couleur = COULEUR.id_couleur";
 
-        if ($size !== null) {
+        if ($size) {
             $sql .= " JOIN TAILLE_PRODUIT ON TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
                       JOIN TAILLE ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille";
         }
 
         $conditions = [];
         
-        if ($search !== null) {
+        if ($search) {
             $conditions[] = "CONCAT(designation, ' ', description, ' ', CATEGORIE.libelle) LIKE :search";
             $params[':search'] = "%$search%";
         }
 
-        if ($color !== null) {
+        if ($color) {
             $conditions[] = "COULEUR.libelle = :couleur";
             $params[':couleur'] = $color;
         }
 
-        if ($size !== null && $category !== "Bonnet") {
+        if ($size && $category !== "Bonnet") {
             $conditions[] = "TAILLE.libelle = :taille";
             $params[':taille'] = $size;
         }
 
-        if ($category !== null) {
+        if ($category) {
             $conditions[] = "CATEGORIE.libelle = :categorie";
             $params[':categorie'] = $category;
         }
