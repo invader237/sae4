@@ -8,7 +8,7 @@ function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
     $router->add('POST', "/api/auth/register", [AuthController::class, 'register']);
     $router->add('GET', "/api/getAllProducts", [ProductController::class, "getAllProducts"]);
-    $router->add('POST', "/api/getProductByIdAndColorAndSize", [ProductController::class, "getProductByIdAndColorAndSize"]);
-    $router->add("POST","/api/getSizesByProductId", [SizeController::class, "getSizesByProductId"]);
-    $router->add("POST","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
+    $router->add('GET', "/api/getProductByIdAndColorAndSize", [ProductController::class, "getProductByIdAndColorAndSize"]);
+    $router->add("GET","/api/getSizesByProductId", [SizeController::class, "getSizesByProductId"]);
+    $router->add("GET","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
 }
