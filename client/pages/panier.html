@@ -1,8 +1,20 @@
-<div id="panier"></div>
-<div id="footer" style="display: none;">
-    <div id="total">Prix total :
-        <span id="prixTotal">0</span>€
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier</title>
+    
+</head>
+<body>
+    <div id="panier"></div>
+    <div id="footer" style="display: none;">
+        <div id="total">Prix total :
+            <span id="prixTotal">0</span>€
+        </div>
+        <button id="clear" class="footer form_button" onclick="clearPanier()">Vider le panier</button>
+        <button id="payer" class="footer form_button">Payer</button>
     </div>
-    <button id="clear" class="footer form_button" onclick="clearPanier()">Vider le panier</button>
-    <button id="payer" class="footer form_button">Payer</button>
-</div>
+</body>
+<script src="../assets/js/panier.js"></script>
+</html>
