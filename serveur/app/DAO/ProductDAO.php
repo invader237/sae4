@@ -85,6 +85,7 @@ class ProductDAO
         $stmt = $this->pdo->prepare(
             'SELECT PRODUIT.*,
                 COULEUR_PRODUIT.reduction AS reduction_couleur, 
+                COULEUR_PRODUIT.url_image,
                 TAILLE_PRODUIT.reduction AS reduction_taille
             FROM PRODUIT
             JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit 
