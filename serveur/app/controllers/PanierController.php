@@ -8,7 +8,7 @@ class PanierController {
         
         $id_utilisateur=AuthMiddleware::getUser();
         $panier = PanierService::getPanier($id_utilisateur);
-        echo json_encode(["data" => $panier], JSON_UNESCAPED_UNICODE);
+        echo json_encode(["data" => $panier.toArray()], JSON_UNESCAPED_UNICODE);
     }
 
     /*
