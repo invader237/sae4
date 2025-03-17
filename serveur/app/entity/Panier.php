@@ -8,7 +8,7 @@ class Panier{
     private $id_couleur;
 
     public function __construct($id_panier,$id_utilisateur,$id_produit,$qte,$id_taille,$id_couleur){
-        $this->id_panier=$id_panier
+        $this->id_panier=$id_panier;
         $this->id_utilisateur=$id_utilisateur;
         $this->id_produit=$id_produit;
         $this->qte=$qte;
