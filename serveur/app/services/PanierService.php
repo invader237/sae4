@@ -1,6 +1,5 @@
 <?php
 require_once('./app/DAO/PanierDAO.php');
-require_once('./app/entity/Panier.php');
 require_once('./app/core/Connexion.php');
 
 class PanierService{

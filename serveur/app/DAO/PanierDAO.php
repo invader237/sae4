@@ -1,5 +1,5 @@
 <?php
-require_once '../entity/Panier.php';
+require_once './app/entity/Panier.php';
 
 class PanierDAO {
     private $pdo;
@@ -8,14 +8,12 @@ class PanierDAO {
         $this->pdo = $pdo;
     }
 
-    public function getPanier(int $id_utilisateur) {
+    public function getPanier($id_utilisateur) {
         $stmt = $this->pdo->prepare(
-            "SELECT cp.id_produit, p.designation, p.description, p.prix, p.url_image, p.id_categorie, 
-                    cp.qte, cp.id_taille, cp.id_couleur
-            FROM PANIER pa
-            JOIN CONTENU_PANIER cp ON pa.id_panier = cp.id_panier
-            JOIN PRODUIT p ON cp.id_produit = p.id_produit
-            WHERE pa.id_utilisateur = :id_utilisateur"
+            "SELECT * FROM `PANIER`, CONTENU_PANIER, PRODUIT
+            WHERE PANIER.id_produit = PRODUIT.id_produit
+            and PANIER.id_produit = CONTENU_PANIER.id_produit
+            and PANIER.id_utilisateur = :id_utilisateur"
         );
         $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         $panier = [];

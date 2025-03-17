@@ -3,7 +3,7 @@ require_once('./app/controllers/AuthController.php');
 require_once('./app/controllers/ProductController.php');
 require_once('./app/controllers/SizeController.php');
 require_once('./app/controllers/ColorController.php');
-require_once('./app/controllers/PanierController.php')
+require_once('./app/controllers/PanierController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);

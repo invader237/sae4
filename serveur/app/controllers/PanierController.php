@@ -1,9 +1,9 @@
 <?php
-require_once('./app/dao/PanierDAO.php');
 require_once('./app/core/AuthMiddleware.php');
+require_once('./app/services/PanierService.php');
 
 class PanierController {
-    public function getPanier() {
+    public static function getPanier() {
         header('Content-Type: application/json');
         
         $id_utilisateur=AuthMiddleware::getUser();
@@ -11,6 +11,7 @@ class PanierController {
         echo json_encode(["data" => $panier], JSON_UNESCAPED_UNICODE);
     }
 
+    /*
     public function addProduitPanier() {
         header('Content-Type: application/json');
         
@@ -80,4 +81,5 @@ class PanierController {
         $success = PanierSerivce::clearPanier($id_utilisateur);
         echo json_encode(["message" => $success ? "Panier vidé" : "Erreur lors du vidage du panier"]);
     }
+    */
 }
