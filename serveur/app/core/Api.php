@@ -2,6 +2,8 @@
 require_once('./app/controllers/ExempleController.php');
 require_once('./app/controllers/AuthController.php');
 require_once('./app/controllers/ProductController.php');
+require_once('./app/controllers/SizeController.php');
+require_once('./app/controllers/ColorController.php');
 
 function setupRoutes($router) {
     $router->add('GET', "/api/home", [ExempleController::class, 'index']);
