@@ -15,10 +15,17 @@ class PanierDAO {
             and PANIER.id_produit = CONTENU_PANIER.id_produit
             and PANIER.id_utilisateur = :id_utilisateur"
         );
+        var_dump($id_utilisateur);
         $stmt->execute(['id_utilisateur' => $id_utilisateur]);
-        $panier = [];
+        
+        $produits = [];
+        $id_panier = null;
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if ($id_panier === null) {
+                $id_panier = $row['id_panier'];
+            }
+
             $product = new Product(
                 $row['id_produit'],
                 $row['designation'],
@@ -27,15 +34,15 @@ class PanierDAO {
                 $row['url_image'],
                 $row['id_categorie']
             );
-            $panier[] = [
-                'produit' => $product,
-                'qte' => $row['qte'],
-                'id_taille' => $row['id_taille'],
-                'id_couleur' => $row['id_couleur']
-            ];
+
+            $produits[$row['id_produit']] = $row['qte'];
         }
 
-        return $panier;
+        if ($id_panier === null) {
+            return null; 
+        }
+
+        return new Panier($id_panier, $id_utilisateur, $produits);
     }
 
     // Ajout ou mise à jour d'un panier

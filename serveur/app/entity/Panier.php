@@ -1,57 +1,61 @@
 <?php
-class Panier{
+require_once('./app/entity/Product.php');
+
+class Panier {
     private $id_panier;
     private $id_utilisateur;
-    private $id_produit;
-    private $qte;
-    private $id_taille;
-    private $id_couleur;
+    private array $produits = []; 
 
-    public function __construct($id_panier,$id_utilisateur,$id_produit,$qte,$id_taille,$id_couleur){
-        $this->id_panier=$id_panier;
-        $this->id_utilisateur=$id_utilisateur;
-        $this->id_produit=$id_produit;
-        $this->qte=$qte;
-        $this->id_taille=$id_taille;
-        $this->id_couleur=$id_couleur;
+    public function __construct($id_panier, $id_utilisateur, $produits = []) {
+        $this->id_panier = $id_panier;
+        $this->id_utilisateur = $id_utilisateur;
+        $this->produits = $produits; 
     }
 
-    public function getIdPanier(){
+    public function getIdPanier() {
         return $this->id_panier;
     }
-    public function getIdUtilisateur(){
+
+    public function getIdUtilisateur() {
         return $this->id_utilisateur;
     }
-    public function getIdProduit(){
-        return $this->id_produit;
-    }
-    public function getQte(){
-        return $this->qte;
-    }
-    public function getIdTaille(){
-        return $this->id_taille;
-    }
-    public function getIdCouleur(){
-        return $this->id_couleur;
+
+    public function getProduits(): array {
+        return $this->produits;
     }
 
-    public function setIdPanier($id_panier){
-        $this->id_panier=$id_panier;
+    public function ajouterProduit($idProduit, $qte) {
+        if (isset($this->produits[$idProduit])) {
+            $this->produits[$idProduit] += $qte;
+        } else {
+            $this->produits[$idProduit] = $qte;
+        }
     }
-    public function setIdUtilisateur($id_utilisateur){
-        $this->id_utilisateur=$id_utilisateur;
+
+    public function retirerProduit($idProduit) {
+        unset($this->produits[$idProduit]);
     }
-    public function setIdProduit($id_produit){
-        $this->id_produit=$id_produit;
+
+    public function modifierQuantite($idProduit, $qte) {
+        if (isset($this->produits[$idProduit])) {
+            if ($qte > 0) {
+                $this->produits[$idProduit] = $qte;
+            } else {
+                $this->retirerProduit($idProduit);
+            }
+        }
     }
-    public function setQte($qte){
-        $this->qte=$qte;
+
+    public function viderPanier() {
+        $this->produits = [];
     }
-    public function setIdTaille($id_taille){
-        $this->id_taille=$id_taille;
-    }
-    public function setIdCouleur($id_couleur){
-        $this->id_couleur=$id_couleur;
+
+    public function toArray() {
+        return [
+            "id_panier" => $this->id_panier,
+            "id_utilisateur" => $this->id_utilisateur,
+            "produits" => $this->produits
+        ];
     }
 }
 ?>
