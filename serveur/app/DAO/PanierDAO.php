@@ -12,11 +12,14 @@ class PanierDAO {
     public function getPanier($id_utilisateur) {
         $stmt = $this->pdo->prepare(
             "SELECT * 
-            FROM PANIER, CONTENU_PANIER, PRODUIT, COULEUR_PRODUIT
-            WHERE PANIER.id_produit = PRODUIT.id_produit
-            AND PRODUIT.id_produit = COULEUR_PRODUIT.id_produit
-            AND PANIER.id_produit = CONTENU_PANIER.id_produit
-            AND PANIER.id_utilisateur = :id_utilisateur ;"
+            FROM PANIER, CONTENU_PANIER, PRODUIT, COULEUR, TAILLE, COULEUR_PRODUIT
+            where CONTENU_PANIER.id_produit = PRODUIT.id_produit
+            AND CONTENU_PANIER.id_couleur = COULEUR.id_couleur
+            AND CONTENU_PANIER.id_taille = TAILLE.id_taille
+            AND COULEUR_PRODUIT.id_couleur = CONTENU_PANIER.id_couleur
+            AND COULEUR_PRODUIT.id_produit = CONTENU_PANIER.id_produit
+            AND PANIER.id_panier = CONTENU_PANIER.id_panier
+            AND PANIER.id_utilisateur = :id_utilisateur;"
         );
             $stmt->execute(['id_utilisateur' => $id_utilisateur]);
             
