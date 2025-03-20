@@ -9,5 +9,12 @@ class PanierService{
         $panier=$panierDAO->getPanier($id_utilisateur);
         return $panier;
     }
+
+    public static function addProduit($id_utilisateur,$produitId,$quantite,$panierId,$id_couleur,$id_taille){
+        $db=Database::getConnection();
+        $panierDAO=new PanierDAO($db);
+        $panier=$panierDAO->addProduit($id_utilisateur,$produitId,$quantite,$panierId,$id_couleur,$id_taille);
+        return $panier;
+    }
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 class Product {
     private $id;
     private $label;
@@ -62,6 +63,14 @@ class Product {
 
     public function setIdCategory($idCategory) {
         $this->idCategory = $idCategory;
+    }
+
+    public function setCouleur($couleur) {
+        $this->couleur = $couleur;
+    }
+
+    public function setTaille($taille) {
+        $this->taille = $taille;
     }
 
     public function toArray() {
