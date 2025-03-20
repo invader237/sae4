@@ -73,6 +73,14 @@ class Product {
         $this->taille = $taille;
     }
 
+    public function setCouleur($couleur) {
+        $this->couleur = $couleur;
+    }
+
+    public function setTaille($taille) {
+        $this->taille = $taille;
+    }
+
     public function toArray() {
         return [
             "id"   => $this->getId(),
