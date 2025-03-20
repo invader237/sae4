@@ -63,3 +63,44 @@ export const getAllProductsFilter = async (search, category, color, size) => {
         console.error(error);
     }
 }
+
+export const getProductByIdAndColorAndSize = async (id, color, size) => {
+    try {
+        const response = await axiosInstance.get("/getProductByIdAndColorAndSize", {
+            params: {
+                id: id,
+                color: color,
+                size: size
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const getColorsByProductId = async (id) => {
+    try {
+        const response = await axiosInstance.get("/getColorsByProductId", {
+            params: {
+                id: id
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const getSizesByProductId = async (id) => {
+    try {
+        const response = await axiosInstance.get("/getSizesByProductId", {
+            params: {
+                id: id
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
