@@ -13,4 +13,5 @@ function setupRoutes($router) {
     $router->add("GET","/api/getSizesByProductId", [SizeController::class, "getSizesByProductId"]);
     $router->add("GET","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
     $router->add('GET',"/api/getPanier", [PanierController::class, "getPanier"]);
+    $router->add('POST',"/api/addProduit", [PanierController::class, "addProduit"]);
 }

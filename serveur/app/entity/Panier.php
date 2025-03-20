@@ -12,6 +12,31 @@ class Panier {
         $this->produits = $produits; 
     }
 
+    public function getIdPanier(): int {
+        return $this->id_panier;
+    }
+
+    public function getIdUtilisateur(): int {
+        return $this->id_utilisateur;
+    }
+
+    public function getProduits(): array {
+        return $this->produits;
+    }
+
+    public function setIdPanier(int $id_panier): void {
+        $this->id_panier = $id_panier;
+    }
+
+    public function setIdUtilisateur(int $id_utilisateur): void {
+        $this->id_utilisateur = $id_utilisateur;
+    }
+
+    public function setProduits(array $produits): void {
+        $this->produits = $produits;
+    }
+
+
     public function toArray(): array {
         $produitsArray = [];
 
