@@ -1,64 +1,65 @@
-document.addEventListener("DOMContentLoaded", function () {
-    afficherPanier();
-});
+import { getCart } from "./core/api/api.js";
 
-function afficherPanier(id_utilisateur) {
-    fetch(`PanierController.php?action=getPanier&id_utilisateur=${id_utilisateur}`) 
-        .then(response => response.json())
-        .then(data => {
-            const panierDiv = document.getElementById('panier');
-            panierDiv.innerHTML = '';
+function createCartItem(entry) {
+    const produit = entry.product;
+    const quantity = entry.quantity;
 
-            if (data.length === 0) {
-                panierDiv.innerHTML = '<p>Votre panier est vide.</p>';
-                document.getElementById("footer").style.display = "none";
-                return;
-            }
+    const item = document.createElement('div');
+    item.className = 'card shadow-sm';
 
-            let total = 0;
-            data.forEach(item => {
-                const produitDiv = document.createElement('div');
-                produitDiv.classList.add('produit');
-                produitDiv.innerHTML = `
-                    <img src="${item.produit.url_image}" alt="${item.produit.designation}" width="100">
-                    <p>${item.produit.designation}</p>
-                    <p>Prix: ${item.produit.prix}€</p>
-                    <p>Quantité: ${item.qte}</p>
-                    <button onclick="supprimerProduit(${item.produit.id_produit}, ${item.id_taille}, ${item.id_couleur})">Supprimer</button>
-                `;
-                panierDiv.appendChild(produitDiv);
+    item.innerHTML = `
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${produit.urlImage}?ref_type=heads" 
+                     class="img-fluid rounded-start h-100" 
+                     alt="${produit.label}" 
+                     style="object-fit: cover; max-height: 180px;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body py-2 px-3 d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <h6 class="card-title mb-1">${produit.label}</h6>
+                        <p class="card-text mb-1" style="font-size: 0.9rem;">Prix : ${parseFloat(produit.price).toFixed(2)} €</p>
+                        <p class="card-text mb-1" style="font-size: 0.9rem;">Quantité : ${quantity}</p>
+                        <p class="card-text mb-1" style="font-size: 0.9rem;"><strong>Sous-total :</strong> ${(parseFloat(produit.price) * quantity).toFixed(2)} €</p>
+                    </div>
+                    <div class="text-end mt-2">
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${produit.id})">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
-                total += item.produit.prix * item.qte;
-            });
-
-            document.getElementById("prixTotal").textContent = total.toFixed(2);
-            document.getElementById("footer").style.display = "block";
-        })
-        .catch(error => console.error('Erreur lors du chargement du panier:', error));
+    return item;
 }
 
-function supprimerProduit(id_utilisateur,id_produit, id_taille, id_couleur) {
-    fetch(`PanierController.php?action=deleteProduitPanier&id_utilisateur=${id_utilisateur}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_produit, id_taille, id_couleur })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        afficherPanier();
-    })
-    .catch(error => console.error('Erreur lors de la suppression:', error));
+async function displayCart() {
+    const panierContainer = document.getElementById('panier');
+    const footer = document.getElementById('footer');
+    const prixTotalSpan = document.getElementById('prixTotal');
+
+    panierContainer.innerHTML = ''; 
+
+    const response = await getCart();
+    const cart = response?.data?.produits;
+
+    if (!cart || cart.length === 0) {
+        panierContainer.innerHTML = '<p>Votre panier est vide.</p>';
+        footer.style.display = 'none';
+        return;
+    }
+
+    let total = 0;
+
+    cart.forEach(entry => {
+        const item = createCartItem(entry);
+        panierContainer.appendChild(item);
+        total += parseFloat(entry.product.price) * entry.quantity;
+    });
+
+    prixTotalSpan.textContent = total.toFixed(2);
+    footer.style.display = 'block';
 }
 
-function clearPanier(id_utilisateur) {
-    fetch(`PanierController.php?action=clearPanier&id_utilisateur=${id_utilisateur}`, {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        afficherPanier(); // Recharge le panier après vidage
-    })
-    .catch(error => console.error('Erreur lors du vidage:', error));
-}
+displayCart();

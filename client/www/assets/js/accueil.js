@@ -4,17 +4,22 @@ const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
 
 function displayProducts(products) {
+    const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
 
     products.forEach((product) => {
         const productCardContainer = document.createElement("div");
         productCardContainer.classList.add("col-lg-3", "col-md-4", "col-sm-6", "col-12");
 
+        const productLink = document.createElement("a");
+        productLink.href = `../pages/produit.html?id=${product.id}`;
+        productLink.classList.add("text-decoration-none", "text-dark", "h-100");
+
         const productCard = document.createElement("div");
         productCard.classList.add("card", "p-3", "shadow-sm", "m-1", "h-100", "d-flex", "flex-column");
-        
-        const imageUrl = product.urlImage.replace(" ", "%20");
-        
+
+        const imageUrl = product.urlImage.replace(/ /g, "%20");
+
         productCard.innerHTML = `
             <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${imageUrl}?ref_type=heads" 
                 class="card-img-top w-100" 
@@ -23,11 +28,14 @@ function displayProducts(products) {
             <div class="card-body flex-grow-1 d-flex flex-column">
                 <h5 class="card-title">${product.label}</h5>
                 <p class="card-text">${product.price} €</p>
-                <a href="../pages/produit.html?id=${product.id}" class="btn btn-primary mt-auto">View Product</a>
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-success mt-2" href="#">Add to Cart</a>
+                </div>
             </div>
         `;
 
-        productCardContainer.appendChild(productCard);
+        productLink.appendChild(productCard);
+        productCardContainer.appendChild(productLink);
         productsContainer.appendChild(productCardContainer);
     });
 }
