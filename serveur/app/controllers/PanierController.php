@@ -13,29 +13,22 @@ class PanierController {
         echo json_encode(["data" => $panier->toArray()], JSON_UNESCAPED_UNICODE);
     }
 
-    public function addProduit() {
+    public static function addProduit() {
         header('Content-Type: application/json');
 
-        $produitId = intval($_POST['produit_id']);
-        $quantite = intval($_POST['quantite']);
-        $panierId = intval($_POST['panier_id']);
-        $id_couleur = intval($_POST['id_couleur']);
-        $id_taille = intval($_POST['id_taille']);
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $produitId = $data['produit_id'] ?? null;
+        $quantite = $data['quantite'] ?? null;
+        $id_couleur = $data['id_couleur'] ?? null;
+        $id_taille = $data['id_taille'] ?? null;
 
         $id_utilisateur=AuthMiddleware::getUser();
 
-        if (!$panierId) {
-            echo json_encode(["success" => false, "message" => "ID du panier non trouvé"]);
-            return;
-        }
+        PanierService::addProduit($id_utilisateur, $produitId, $quantite, $id_couleur, $id_taille);
 
-        $result = PanierService::addProduit($id_utilisateur, $produitId, $quantite, $panierId, $id_couleur, $id_taille);
-
-        if ($result) {
-            echo json_encode(["success" => true, "message" => "Produit ajouté ou mis à jour avec succès"]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Erreur lors de l'ajout du produit"]);
-        }
+        echo json_encode(["success" => true, "message" => "Produit ajouté ou mis à jour avec succès"]);
     }
 
 }
