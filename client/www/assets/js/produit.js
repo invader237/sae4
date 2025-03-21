@@ -1,158 +1,129 @@
 import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId } from "./core/api/api.js";
+
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
-const colorDefault = await getColorsByProductId(id);
-let color = colorDefault.data?.[0].id_couleur;
-const sizeDefault = await getSizesByProductId(id);
-let size = sizeDefault.data?.[0].id_taille;
-//const connected = getUserLoginStatus();
+
+// Initialisation par défaut de la couleur et de la taille
+let color, size;
+
+(async () => {
+    const colorDefault = await getColorsByProductId(id);
+    color = colorDefault.data?.[0]?.id;
+
+    const sizeDefault = await getSizesByProductId(id);
+    size = sizeDefault.data?.[0]?.id;
+
+    try {
+        const response = await getProductByIdAndColorAndSize(id, color, size);
+        afficherDetails(response.data);
+    } catch (error) {
+        console.error("Erreur lors du chargement des détails produit:", error);
+    }
+})();
 
 function quantiteCommandeeValide(qtte) {
-    return !(parseInt(qtte) <= 0 || isNaN(parseInt(qtte)));
+    const parsed = parseInt(qtte);
+    return !isNaN(parsed) && parsed > 0;
 }
 
 async function imprimerSelectionCouleur(id_produit) {
-    const couleurs = new Map();
-    const couleursDisponibles = await getColorsByProductId(id_produit);
-
-    couleursDisponibles.data.forEach((couleur) => {
-        couleurs.set(couleur.id_couleur, couleur.libelle);
-    });
-
+    const couleurs = await getColorsByProductId(id_produit);
     const selecteur = document.createElement("select");
-    selecteur.setAttribute("id", "selectCouleur");
+    selecteur.id = "selectCouleur";
 
-    couleurs.forEach((nomCouleur, idCouleur) => {
-        let option = document.createElement("option");
-        option.text = nomCouleur;
-        option.value = idCouleur;
-        if (idCouleur == color) {
-            option.selected = true;
-        }
-        selecteur.add(option);
+    couleurs.data.forEach((couleurOption) => {
+        const option = document.createElement("option");
+        option.textContent = couleurOption.label;
+        option.value = couleurOption.id;
+        if (couleurOption.id === color) option.selected = true;
+        selecteur.appendChild(option);
     });
 
     const couleurContainer = document.getElementById("couleur");
-    couleurContainer.innerHTML = "Couleur : ";
+    couleurContainer.textContent = "Couleur : ";
     couleurContainer.appendChild(selecteur);
 
-    // Écouteur d'événement pour recharger les détails selon la couleur sélectionnée
-    selecteur.addEventListener("change", (event) => {
+    selecteur.addEventListener("change", async (event) => {
         color = event.target.value;
-        getProductByIdAndColorAndSize(id_produit, color, size)
-            .then((response) => afficherDetails(response.data))
-            .catch((error) => console.error("Erreur lors du chargement des détails produit:", error));
+        try {
+            const response = await getProductByIdAndColorAndSize(id_produit, color, size);
+            afficherDetails(response.data);
+        } catch (error) {
+            console.error("Erreur lors du rechargement avec la couleur:", error);
+        }
     });
 }
 
 async function imprimerSelectionTaille(id_produit) {
-    let tailles = new Map();
-    const taillesDisponibles = await getSizesByProductId(id_produit);
-
-    taillesDisponibles.data.forEach((taille) => {
-        tailles.set(taille.id_taille, taille.libelle);
-    });
-
+    const tailles = await getSizesByProductId(id_produit);
     const selecteur = document.createElement("select");
-    selecteur.setAttribute("id", "selectTaille");
+    selecteur.id = "selectTaille";
 
-    tailles.forEach((nomTaille, idTaille) => {
-        let option = document.createElement("option");
-        option.text = nomTaille;
-        option.value = idTaille;
-        if (idTaille == size) {
-            option.selected = true;
-        }
-        selecteur.add(option);
+    tailles.data.forEach((tailleOption) => {
+        const option = document.createElement("option");
+        option.textContent = tailleOption.label;
+        option.value = tailleOption.id;
+        if (tailleOption.id_taille === size) option.selected = true;
+        selecteur.appendChild(option);
     });
 
     const tailleContainer = document.getElementById("taille");
-    tailleContainer.innerHTML = "Taille : ";
+    tailleContainer.textContent = "Taille : ";
     tailleContainer.appendChild(selecteur);
 
-    // Écouteur d'événement pour recharger les détails selon la taille sélectionnée
-    selecteur.addEventListener("change", (event) => {
+    selecteur.addEventListener("change", async (event) => {
         size = event.target.value;
-        getProductByIdAndColorAndSize(id_produit, color, size)
-            .then((response) => afficherDetails(response.data))
-            .catch((error) => console.error("Erreur lors du chargement des détails produit:", error));
+        try {
+            const response = await getProductByIdAndColorAndSize(id_produit, color, size);
+            afficherDetails(response.data);
+        } catch (error) {
+            console.error("Erreur lors du rechargement avec la taille:", error);
+        }
     });
 }
 
 function boutonCommander(id_produit) {
     const bouton = document.querySelector("input[type=button]");
-    bouton.addEventListener("click", (event) => {
-        const nbCommandee = root.getElementById("nbrCommande").valueAsNumber;
+    bouton.addEventListener("click", () => {
+        const nbCommandee = document.getElementById("nbrCommande").valueAsNumber;
         if (quantiteCommandeeValide(nbCommandee)) {
-            /* fetch("https://devweb.iutmetz.univ-lorraine.fr/~laroche5/SAE_401/serveur/api/newPanier.php", {
-                    method: "POST",
-                    body: new URLSearchParams({
-                        id_us: cookieValue,
-                        id_prod: id_produit,
-                        id_tail: size,
-                        id_col: color,
-                        qte_pan: nbCommandee,
-                    }),
-                })
-                .then((reponse) => {
-                    reponse.json().then((data) => {
-                        if (data.status === "error") {
-                            window.location.href = "https://devweb.iutmetz.univ-lorraine.fr/~trivino7u/sae4/client/www/pages/login.html";
-                        } else if (data.status === "success") {
-                            window.location.href = "accueil.html";
-                        }
-                    })
-                })
-                .catch((error) => { console.log(error) }); */
-        };
-    });
-}
-
-// Fonction pour afficher les détails du produit
-function afficherDetails(product) {
-    product.url_image = product.url_image.replace(" ", "%20");
-
-    const h1Element = document.querySelector(".produitDetail h1");
-    const img_prod = document.querySelector(".img_prod");
-    const desc_prod = document.querySelector(".desc_prod");
-    const sku = document.getElementById("sku");
-    const prix = document.getElementById("prix");
-    const nbrCommande = document.getElementById("nbrCommande");
-    const nbrStock = document.getElementById("nbrStock");
-    const prixTotal = document.getElementById("prix_tot");
-    const boutonLabel = document.querySelector(".ajouterPanierLabel");
-
-    document.title = product.designation + " - PM2";
-    h1Element.innerHTML = product.designation;
-    img_prod.src = `https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${product.url_image}?ref_type=heads`;
-    desc_prod.innerHTML = product.description;
-    sku.innerHTML = "Work in progress";
-    prix.innerHTML = product.prix;
-    prixTotal.innerHTML = product.prix;
-
-    imprimerSelectionCouleur(id);
-    imprimerSelectionTaille(id);
-
-    //const nbS = getNbProductFromStock(id, color, size);
-    //nbrStock.innerHTML = nbS;
-    //const nbP = getNbProductFromCart(id);
-    //boutonLabel.innerHTML = `Déjà ${nb} dans le panier`;
-
-    nbrCommande.addEventListener("input", (event) => {
-        const contenu = event.target.value;
-        if (!quantiteCommandeeValide(contenu)) {
-            event.target.style.background = "red";
-            prixTotal.innerHTML = prix.innerHTML;
+            // TODO: Ajouter l'appel API pour ajouter au panier ici
+            console.log(`Commande de ${nbCommandee} article(s) pour le produit ${id_produit}, couleur ${color}, taille ${size}`);
         } else {
-            event.target.style.background = "whitesmoke";
-            prixTotal.innerHTML = Math.round(prix.innerHTML * parseInt(contenu) * 100) / 100;
+            alert("Veuillez entrer une quantité valide.");
         }
     });
-
-    boutonCommander(id);
 }
 
-// Charger les détails du produit au chargement de la page
-getProductByIdAndColorAndSize(id, color, size)
-    .then((response) => afficherDetails(response.data))
-    .catch((error) => console.error("Erreur lors du chargement des détails produit:", error));
+function afficherDetails(product) {
+    if (!product) return;
+
+    product.urlImage = product.urlImage.replace(" ", "%20");
+
+    document.title = `${product.label} - PM2`;
+    document.querySelector(".produitDetail h1").textContent = product.label;
+    document.querySelector(".img_prod").src = `https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${product.urlImage}?ref_type=heads`;
+    document.querySelector(".desc_prod").textContent = product.description;
+    document.getElementById("sku").textContent = "Work in progress";
+    document.getElementById("prix").textContent = product.price;
+    document.getElementById("prix_tot").textContent = product.price;
+
+    imprimerSelectionCouleur(product.id);
+    imprimerSelectionTaille(product.id);
+    boutonCommander(product.id);
+
+    const nbrCommande = document.getElementById("nbrCommande");
+    const prixTotal = document.getElementById("prix_tot");
+    const prix = parseFloat(product.price);
+
+    nbrCommande.addEventListener("input", (event) => {
+        const val = parseInt(event.target.value);
+        if (quantiteCommandeeValide(val)) {
+            event.target.style.background = "whitesmoke";
+            prixTotal.textContent = (prix * val).toFixed(2);
+        } else {
+            event.target.style.background = "red";
+            prixTotal.textContent = prix.toFixed(2);
+        }
+    });
+}
