@@ -1,77 +1,77 @@
 <?php
 class Product {
-    private $id_produit;
-    private $designation;
+    private $id;
+    private $label;
     private $description;
-    private $prix;
-    private $url_image;
-    private $id_categorie;
+    private $price;
+    private $urlImage;
+    private $idCategory;
 
-    public function __construct($id_produit, $designation, $description, $prix, $url_image, $id_categorie) {
-        $this->id_produit = $id_produit;
-        $this->designation = $designation;
+    public function __construct($id, $label, $description, $price, $urlImage, $idCategory) {
+        $this->id = $id;
+        $this->label = $label;
         $this->description = $description;
-        $this->prix = $prix;
-        $this->url_image = $url_image;
-        $this->id_categorie = $id_categorie;
+        $this->price = $price;
+        $this->urlImage = $urlImage;
+        $this->idCategory = $idCategory;
     }
 
-    public function getId_produit() {
-        return $this->id_produit;
+    public function getId() {
+        return $this->id;
     }
 
-    public function getDesignation() {
-        return $this->designation;
+    public function getLabel() {
+        return $this->label;
     }
 
     public function getDescription() {
         return $this->description;
     }
 
-    public function getPrix() {
-        return $this->prix;
+    public function getPrice() {
+        return $this->price;
     }
 
-    public function getUrl_image() {
-        return $this->url_image;
+    public function getUrlImage() {
+        return $this->urlImage;
     }
 
-    public function getId_categorie() {
-        return $this->id_categorie;
+    public function getIdCategory() {
+        return $this->idCategory;
     }
 
-    public function setId_produit($id_produit) {
-        $this->id_produit = $id_produit;
+    public function setId($id) {
+        $this->id = $id;
     }
 
-    public function setDesignation($designation) {
-        $this->designation = $designation;
+    public function setLabel($label) {
+        $this->label = $label;
     }
 
     public function setDescription($description) {
         $this->description = $description;
     }
 
-    public function setPrix($prix) {
-        $this->prix = $prix;
+    public function setPrice($price) {
+        $this->price = $price;
     }
 
-    public function setUrl_image($url_image) {
-        $this->url_image = $url_image;
+    public function setUrlImage($urlImage) {
+        $this->urlImage = $urlImage;
     }
 
-    public function setId_categorie($id_categorie) {
-        $this->id_categorie = $id_categorie;
+    public function setIdCategory($idCategory) {
+        $this->idCategory = $idCategory;
     }
 
     public function toArray() {
         return [
-            "id_produit"   => $this->getId_produit(),
-            "designation"  => $this->getDesignation(),
+            "id"   => $this->getId(),
+            "label"  => $this->getLabel(),
             "description"  => $this->getDescription(),
-            "prix"         => $this->getPrix(),
-            "url_image"    => $this->getUrl_image(),
-            "id_categorie" => $this->getId_categorie()
+            "price"         => $this->getPrice(),
+            "urlImage"    => $this->getUrlImage(),
+            "idCategory" => $this->getIdCategory()
         ];
     }
 }
