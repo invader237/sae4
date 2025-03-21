@@ -12,10 +12,6 @@ class Panier {
         $this->produits = $produits; 
     }
 
-    public function getIdPanier(): int {
-        return $this->id_panier;
-    }
-
     public function getIdPanier() {
         return $this->id_panier;
     }
