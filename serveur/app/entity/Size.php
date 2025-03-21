@@ -1,33 +1,44 @@
 <?php
 class Size {
-    private $id_taille;
-    private $libelle;
+    private $id;
+    private $label;
+    private $discount;
 
-    public function __construct($id_taille, $libelle) {
-        $this->id_taille = $id_taille;
-        $this->libelle = $libelle;
+    public function __construct($id, $label, $discount) {
+        $this->id = $id;
+        $this->label = $label;
+        $this->discount = $discount;
     }
 
-    public function getId_taille(): int {
-        return $this->id_taille;
+    public function getId() {
+        return $this->id;
     }
 
-    public function getLibelle(): string {
-        return $this->libelle;
+    public function getLabel() {
+        return $this->label;
     }
 
-    public function setId_taille(int $id_taille) {
-        $this->id_taille = $id_taille;
+    public function getDiscount() {
+        return $this->discount;
     }
 
-    public function setLibelle(string $libelle) {
-        $this->libelle = $libelle;
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setLabel($label) {
+        $this->label = $label;
+    }
+
+    public function setDiscount($discount) {
+        $this->discount = $discount;
     }
 
     public function toArray() {
-        return [
-            "id_taille"   => $this->getId_taille(),
-            "libelle"  => $this->getLibelle()
-        ];
+        return array(
+            'id' => $this->id,
+            'label' => $this->label,
+            'discount' => $this->discount
+        );
     }
 }
