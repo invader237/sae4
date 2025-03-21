@@ -1,28 +1,40 @@
 import { login } from './core/api/api.js';
 
-console.log("login.js");
+console.log("login.js loaded");
 
-const form = document.querySelector("#loginForm");
+const loginForm = document.querySelector("#loginForm");
+const errorMessage = document.getElementById("error");
 
-form.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    authentifier();
+    await authenticateUser();
 });
 
+async function authenticateUser() {
+    try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        
+        if (!email || !password) {
+            displayError("Tous les champs sont obligatoires.");
+            return;
+        }
 
-async function authentifier() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const hashPassword = sha256(password);
-    await login(email, hashPassword).then((response) => {
-        if (response.status === 200) {
+        const hashedPassword = sha256(password);
+        const response = await login(email, hashedPassword);
+        
+        if (response.status === 200 && response.data.token) {
             localStorage.setItem("authToken", response.data.token);
             window.location.href = "../pages/profil.html";
+        } else {
+            displayError("Identifiants incorrects. Veuillez réessayer.");
         }
-    }).catch((error) => {
-        const errorMessage = document.getElementById("error");
-        errorMessage.innerText = error.data.message;
-        errorMessage.attributes.removeNamedItem("hidden");
-    });
+    } catch (error) {
+        displayError(error?.data?.message || "Une erreur s'est produite. Veuillez réessayer.");
+    }
 }
 
+function displayError(message) {
+    errorMessage.innerText = message;
+    errorMessage.removeAttribute("hidden");
+}
