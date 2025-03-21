@@ -12,7 +12,7 @@ class SizeDAO {
     public function getSizesByProductId(int $id): array {
         $stmt = $this->pdo->prepare('
             SELECT TAILLE.id_taille, TAILLE.libelle 
-            FROM TAILLE 
+            FROM TAILLE
             JOIN TAILLE_PRODUIT ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille 
             WHERE TAILLE_PRODUIT.id_produit = :id
         ');
@@ -20,7 +20,7 @@ class SizeDAO {
 
         $sizes = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $sizes[] = new Size($row['id_taille'], $row['libelle']);
+            $sizes[] = new Size($row['id_taille'], $row['libelle'], -1);
         }
 
         return $sizes;
