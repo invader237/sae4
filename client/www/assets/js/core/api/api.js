@@ -93,3 +93,26 @@ export const getSizesByProductId = async (id) => {
         console.error(error);
     }
 };
+
+export const getCart = async () => {
+    try {
+        const response = await axiosInstance.get("/getPanier");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const addToCart = async (id, quantity, color, size) => {
+    try {
+        const response = await axiosInstance.post("/addProduit", {
+            produit_id: id,
+            quantite: quantity,
+            id_couleur: color,
+            id_taille: size,
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
