@@ -1,33 +1,56 @@
 <?php
 class Color {
-    private $id_couleur;
-    private $libelle;
+    private $id;
+    private $label;
+    private $discount;
+    private $urlImage;
 
-    public function __construct($id_couleur, $libelle) {
-        $this->id_couleur = $id_couleur;
-        $this->libelle = $libelle;
+    public function __construct($id, $label, $discount, $urlImage) {
+        $this->id = $id;
+        $this->label = $label;
+        $this->discount = $discount;
+        $this->urlImage = $urlImage;
     }
 
-    public function getId_couleur(): int {
-        return $this->id_couleur;
+    public function getId() {
+        return $this->id;
     }
 
-    public function getLibelle(): string {
-        return $this->libelle;
+    public function getLabel() {
+        return $this->label;
     }
 
-    public function setId_couleur(int $id_couleur) {
-        $this->id_couleur = $id_couleur;
+    public function getDiscount() {
+        return $this->discount;
     }
 
-    public function setLibelle(string $libelle) {
-        $this->libelle = $libelle;
+    public function getUrlImage() {
+        return $this->urlImage;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setLabel($label) {
+        $this->label = $label;
+    }
+
+    public function setDiscount($discount) {
+        $this->discount = $discount;
+    }
+
+    public function setUrlImage($urlImage) {
+        $this->urlImage = $urlImage;
     }
 
     public function toArray() {
-        return [
-            "id_couleur"   => $this->getId_couleur(),
-            "libelle"  => $this->getLibelle()
-        ];
+        return array(
+            'id' => $this->id,
+            'label' => $this->label,
+            'discount' => $this->discount,
+            'urlImage' => $this->urlImage
+        );
     }
+
 }

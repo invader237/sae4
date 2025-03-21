@@ -20,7 +20,7 @@ class ColorDAO {
 
         $colors = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $colors[] = new Color($row['id_couleur'], $row['libelle']);
+            $colors[] = new Color($row['id_couleur'], $row['libelle'], -1, '');
         }
 
         return $colors;
