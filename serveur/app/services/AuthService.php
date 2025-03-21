@@ -13,7 +13,7 @@ require_once('./app/core/Connexion.php');
 
 class AuthService {
 
-    public static function login($email, $password) {
+    public static function login($email, $pwd) {
         $db = Database::getConnection();
         $userDAO = new UserDAO($db);
         $user = $userDAO->getUserByEmail($email);
@@ -22,9 +22,9 @@ class AuthService {
             return null;
         }
 
-        $hashedPassword = hash('sha256', $password);
+        $hashedPwd = hash('sha256', $pwd);
 
-        if ($hashedPassword !== $user->getMdp()) {
+        if ($hashedPwd !== $user->getPwd()) {
             return null; 
         }
 
@@ -32,7 +32,7 @@ class AuthService {
             $jwt = JWT::encode([
                 "iat" => time(),
                 "exp" => time() + 3600,
-                "id" => $user->getIdUtilisateur(),
+                "id" => $user->getId(),
             ], SECURITY_SALT, 'HS256');
             return $jwt;
         } catch (Exception $e) {
@@ -40,10 +40,10 @@ class AuthService {
         }
     }
 
-    public static function register($prenom, $nom, $date_naissance, $email, $mdp, $id_civilite) {
+    public static function register($firstName, $name, $brithDate, $email, $pwd, $idTitle) {
         $db = Database::getConnection();
         $userDAO = new UserDAO($db);
-        $user = new User(0, $prenom, $nom, $date_naissance, $email, hash('sha256', $mdp), $id_civilite);
+        $user = new User(0, $firstName, $name, $birthDate, $email, hash('sha256', $pwd), $idTitle);
         $userDAO->createUser($user);
     }
 }

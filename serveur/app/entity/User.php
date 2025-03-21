@@ -1,77 +1,77 @@
 <?php
 class User {
-    private $idUtilisateur;
-    private $prenom;
-    private $nom;
-    private $dateNaissance;
+    private $id;
+    private $firstName;
+    private $name;
+    private $birthDate;
     private $email;
-    private $mdp;
-    private $idCivilite;
+    private $pwd;
+    private $idTitle;
 
-    public function __construct($idUtilisateur, $prenom, $nom, $dateNaissance, $email, $mdp, $idCivilite) {
-        $this->idUtilisateur = $idUtilisateur;
-        $this->prenom = $prenom;
-        $this->nom = $nom;
-        $this->dateNaissance = $dateNaissance;
+    public function __construct($id, $firstName, $name, $birthDate, $email, $pwd, $idTitle) {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->name = $name;
+        $this->birthDate = $birthDate;
         $this->email = $email;
-        $this->mdp = $mdp;
-        $this->idCivilite = $idCivilite;
+        $this->pwd = $pwd;
+        $this->idTitle = $idTitle;
     }
 
-    public function getIdUtilisateur() {
-        return $this->idUtilisateur;
+    public function getId() {
+        return $this->id;
     }
 
-    public function getPrenom() {
-        return $this->prenom;
+    public function getFirstName() {
+        return $this->firstName;
     }
 
-    public function getNom() {
-        return $this->nom;
+    public function getName() {
+        return $this->name;
     }
 
-    public function getDateNaissance() {
-        return $this->dateNaissance;
+    public function getBirth() {
+        return $this->birthDate;
     }
 
     public function getEmail() {
         return $this->email;
     }
 
-    public function getMdp() {
-        return $this->mdp;
+    public function getPwd() {
+        return $this->pwd;
     }
 
-    public function getIdCivilite() {
-        return $this->idCivilite;
+    public function getTitle() {
+        return $this->idTitle;
     }
 
-    public function setIdUtilisateur($idUtilisateur) {
-        $this->idUtilisateur = $idUtilisateur;
+    public function setId($id) {
+        $this->id = $id;
     }
 
-    public function setPrenom($prenom) {
-        $this->prenom = $prenom;
+    public function setFirstName($firstName) {
+        $this->firstName = $firstName;
     }
 
-    public function setNom($nom) {
-        $this->nom = $nom;
+    public function setName($name) {
+        $this->name = $name;
     }
 
-    public function setDateNaissance($dateNaissance) {
-        $this->dateNaissance = $dateNaissance;
+    public function setBirth($birthDate) {
+        $this->birthDate = $birthDate;
     }
 
     public function setEmail($email) {
         $this->email = $email;
     }
 
-    public function setMdp($mdp) {
-        $this->mdp = $mdp;
+    public function setPwd($pwd) {
+        $this->pwd = $pwd;
     }
 
-    public function setIdCivilite($idCivilite) {
-        $this->idCivilite = $idCivilite;
+    public function setTitle($idTitle) {
+        $this->idTitle = $idTitle;
     }
 
 }

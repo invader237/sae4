@@ -32,12 +32,12 @@ class UserDAO {
     public function createUser(User $user): void {
         $stmt = $this->pdo->prepare('INSERT INTO UTILISATEUR (prenom, nom, date_naissance, email, mdp, id_civilite) VALUES (:prenom, :nom, :date_naissance, :email, :mdp, :id_civilite)');
         $stmt->execute([
-            'prenom' => $user->getPrenom(),
-            'nom' => $user->getNom(),
-            'date_naissance' => $user->getDateNaissance(),
+            'prenom' => $user->getFirstName(),
+            'nom' => $user->getName(),
+            'date_naissance' => $user->getBirthDate(),
             'email' => $user->getEmail(),
-            'mdp' => $user->getMdp(),
-            'id_civilite' => $user->getIdCivilite()
+            'mdp' => $user->getPwd(),
+            'id_civilite' => $user->getIdTitle()
         ]);
     }
 }
