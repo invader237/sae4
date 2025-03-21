@@ -42,7 +42,7 @@ async function displayCart() {
     panierContainer.innerHTML = ''; 
 
     const response = await getCart();
-    const cart = response?.data?.produits;
+    const cart = response?.data?.products;
 
     if (!cart || cart.length === 0) {
         panierContainer.innerHTML = '<p>Votre panier est vide.</p>';

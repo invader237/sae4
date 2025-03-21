@@ -3,7 +3,7 @@ require_once('./app/controllers/AuthController.php');
 require_once('./app/controllers/ProductController.php');
 require_once('./app/controllers/SizeController.php');
 require_once('./app/controllers/ColorController.php');
-require_once('./app/controllers/PanierController.php');
+require_once('./app/controllers/CartController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
@@ -12,6 +12,6 @@ function setupRoutes($router) {
     $router->add('GET', "/api/getProductByIdAndColorAndSize", [ProductController::class, "getProductByIdAndColorAndSize"]);
     $router->add("GET","/api/getSizesByProductId", [SizeController::class, "getSizesByProductId"]);
     $router->add("GET","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
-    $router->add('GET',"/api/getPanier", [PanierController::class, "getPanier"]);
-    $router->add('POST',"/api/addProduit", [PanierController::class, "addProduit"]);
+    $router->add('GET',"/api/getPanier", [CartController::class, "getCart"]);
+    $router->add('POST',"/api/addProduit", [CartController::class, "addProduct"]);
 }
