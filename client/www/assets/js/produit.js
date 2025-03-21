@@ -26,7 +26,7 @@ function quantiteCommandeeValide(qtte) {
     return !isNaN(parsed) && parsed > 0;
 }
 
-async function imprimerSelectionCouleur(id_produit) {
+async function imprimerSelectionCouleur(id_produit, selectedColor) {
     const couleurs = await getColorsByProductId(id_produit);
     const selecteur = document.createElement("select");
     selecteur.id = "selectCouleur";
@@ -35,7 +35,7 @@ async function imprimerSelectionCouleur(id_produit) {
         const option = document.createElement("option");
         option.textContent = couleurOption.label;
         option.value = couleurOption.id;
-        if (couleurOption.id === color) option.selected = true;
+        if (couleurOption.id == selectedColor) option.selected = true;
         selecteur.appendChild(option);
     });
 
@@ -47,14 +47,14 @@ async function imprimerSelectionCouleur(id_produit) {
         color = event.target.value;
         try {
             const response = await getProductByIdAndColorAndSize(id_produit, color, size);
-            afficherDetails(response.data);
+            afficherDetails(response.data, color, size);
         } catch (error) {
             console.error("Erreur lors du rechargement avec la couleur:", error);
         }
     });
 }
 
-async function imprimerSelectionTaille(id_produit) {
+async function imprimerSelectionTaille(id_produit, selectedSize) {
     const tailles = await getSizesByProductId(id_produit);
     const selecteur = document.createElement("select");
     selecteur.id = "selectTaille";
@@ -63,7 +63,7 @@ async function imprimerSelectionTaille(id_produit) {
         const option = document.createElement("option");
         option.textContent = tailleOption.label;
         option.value = tailleOption.id;
-        if (tailleOption.id_taille === size) option.selected = true;
+        if (tailleOption.id == selectedSize) option.selected = true;
         selecteur.appendChild(option);
     });
 
@@ -75,7 +75,7 @@ async function imprimerSelectionTaille(id_produit) {
         size = event.target.value;
         try {
             const response = await getProductByIdAndColorAndSize(id_produit, color, size);
-            afficherDetails(response.data);
+            afficherDetails(response.data, color, size);
         } catch (error) {
             console.error("Erreur lors du rechargement avec la taille:", error);
         }
@@ -95,7 +95,7 @@ function boutonCommander(id_produit) {
     });
 }
 
-function afficherDetails(product) {
+function afficherDetails(product, selectedColor = color, selectedSize = size) {
     if (!product) return;
 
     product.urlImage = product.urlImage.replace(" ", "%20");
@@ -108,8 +108,8 @@ function afficherDetails(product) {
     document.getElementById("prix").textContent = product.price;
     document.getElementById("prix_tot").textContent = product.price;
 
-    imprimerSelectionCouleur(product.id);
-    imprimerSelectionTaille(product.id);
+    imprimerSelectionCouleur(product.id, selectedColor);
+    imprimerSelectionTaille(product.id, selectedSize);
     boutonCommander(product.id);
 
     const nbrCommande = document.getElementById("nbrCommande");
