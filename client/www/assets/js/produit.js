@@ -1,4 +1,5 @@
 import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId } from "./core/api/api.js";
+import { addToCart} from "./core/api/api.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
@@ -87,7 +88,7 @@ function boutonCommander(id_produit) {
     bouton.addEventListener("click", () => {
         const nbCommandee = document.getElementById("nbrCommande").valueAsNumber;
         if (quantiteCommandeeValide(nbCommandee)) {
-            // TODO: Ajouter l'appel API pour ajouter au panier ici
+            addToCart(id_produit, nbCommandee, size, color);
             console.log(`Commande de ${nbCommandee} article(s) pour le produit ${id_produit}, couleur ${color}, taille ${size}`);
         } else {
             alert("Veuillez entrer une quantité valide.");
