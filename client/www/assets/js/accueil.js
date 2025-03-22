@@ -35,8 +35,10 @@ function displayProducts(products) {
             <div class="card-body flex-grow-1 d-flex flex-column">
                 <h5 class="card-title">${productContent.label || 'Produit'}</h5>
                 <p class="card-text"> ${(Number(productContent.price) || 0).toFixed(2)} €</p>
-                <div class="d-flex justify-content-between mt-auto">
-                    <button class="btn btn-success add-to-cart-btn">Ajouter</button>
+                <div class="d-flex justify-content-end mt-auto">
+                    <button class="btn btn-success add-to-cart-btn">
+                        <img src="../assets/img/icones/shopping-cart.png" style="width: 20px; height: 20px; margin: 5px;" alt="Ajouter au panier">
+                    </button>
                 </div>
             </div>
         `;
