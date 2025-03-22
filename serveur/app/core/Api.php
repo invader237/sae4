@@ -14,4 +14,6 @@ function setupRoutes($router) {
     $router->add("GET","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
     $router->add('GET',"/api/getPanier", [CartController::class, "getCart"]);
     $router->add('POST',"/api/addProduit", [CartController::class, "addProduct"]);
+    $router->add('DELETE', '/api/deleteProduct', [CartController::class, 'removeProduct']);
+    $router->add('DELETE', '/api/deleteAllProducts', [CartController::class, 'removeAllProduct']);
 }
