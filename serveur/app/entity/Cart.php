@@ -1,6 +1,4 @@
 <?php
-require_once('./app/entity/Product.php');
-
 class Cart {
     private $id;
     private $idUser;
