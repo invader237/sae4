@@ -33,4 +33,32 @@ class CartController {
         echo json_encode(["success" => true, "message" => "Produit ajouté ou mis à jour avec succès"]);
     }
 
+    public static function removeProduct() {
+        header("Content-Type: application/json");
+        
+        $idUser=AuthMiddleware::getUser();
+
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $produitId = $data['idProduct'] ?? null;
+        $idColor = $data['idColor'] ?? null;
+        $idSize = $data['idSize'] ?? null;
+
+        CartService::removeProduct($idUser, $produitId, $idColor, $idSize);
+
+        echo json_encode(["success" => true, "message" => "Produit supprimé avec succès"]);
+    }
+
+    public static function removeAllProduct() {
+        header("Content-Type: application/json");
+        
+        $idUser=AuthMiddleware::getUser();
+
+        CartService::removeAllProduct($idUser);
+
+        echo json_encode(["success" => true, "message" => "Tous les produits ont été supprimés avec succès"]);
+
+    }
+
 }
