@@ -1,4 +1,5 @@
 import { getAllProducts, getAllProductsFilter } from "./core/api/api.js";
+import { addToCart } from "./core/api/api.js";
 
 const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
@@ -8,31 +9,49 @@ function displayProducts(products) {
     productsContainer.innerHTML = "";
 
     products.forEach((product) => {
+        const productContent = product.product;
+        const color = product.color;
+        const size = product.size;
+
         const productCardContainer = document.createElement("div");
         productCardContainer.classList.add("col-lg-3", "col-md-4", "col-sm-6", "col-12");
 
         const productLink = document.createElement("a");
-        productLink.href = `../pages/produit.html?id=${product.id}`;
+        productLink.href = `../pages/produit.html?id=${productContent.id}`;
         productLink.classList.add("text-decoration-none", "text-dark", "h-100");
 
         const productCard = document.createElement("div");
         productCard.classList.add("card", "p-3", "shadow-sm", "m-1", "h-100", "d-flex", "flex-column");
 
-        const imageUrl = product.urlImage.replace(/ /g, "%20");
+        const imageUrl = productContent.urlImage 
+            ? productContent.urlImage.replace(/ /g, "%20")
+            : "placeholder.jpg";
 
         productCard.innerHTML = `
             <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${imageUrl}?ref_type=heads" 
                 class="card-img-top w-100" 
-                alt="Product Image" 
+                alt="${productContent.designation || 'Image produit'}" 
                 style="height: 250px; object-fit: cover;">
             <div class="card-body flex-grow-1 d-flex flex-column">
-                <h5 class="card-title">${product.label}</h5>
-                <p class="card-text">${product.price} €</p>
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-success mt-2" href="#">Add to Cart</a>
+                <h5 class="card-title">${productContent.label || 'Produit'}</h5>
+                <p class="card-text"> ${(Number(productContent.price) || 0).toFixed(2)} €</p>
+                <div class="d-flex justify-content-between mt-auto">
+                    <button class="btn btn-success add-to-cart-btn">Ajouter</button>
                 </div>
             </div>
         `;
+
+        const addToCartButton = productCard.querySelector(".add-to-cart-btn");
+        addToCartButton.addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            try {
+                await addToCart(productContent.id, 1, size.id, color.id);
+                alert("Produit ajouté au panier !");
+            } catch (error) {
+                console.error("Erreur lors de l'ajout au panier :", error);
+            }
+        });
 
         productLink.appendChild(productCard);
         productCardContainer.appendChild(productLink);
