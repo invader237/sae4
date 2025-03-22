@@ -106,10 +106,10 @@ export const getCart = async () => {
 export const addToCart = async (id, quantity, color, size) => {
     try {
         const response = await axiosInstance.post("/addProduit", {
-            produit_id: id,
-            quantite: quantity,
-            id_couleur: color,
-            id_taille: size,
+            idProduct: id,
+            quantity: quantity,
+            idColor: color,
+            idSize: size,
         });
         return response.data;
     } catch (error) {
