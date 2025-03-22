@@ -93,5 +93,31 @@ class CartDAO {
             'idSize' => $idSize
         ]);
     }
+
+    public function removeProduct($idUser, $idProduct, $idColor, $idSize): void {
+        $stmt = $this->pdo->prepare(
+            'DELETE FROM CONTENU_PANIER
+            WHERE id_panier = (SELECT id_panier FROM PANIER WHERE id_utilisateur = :idUser)
+            AND id_produit = :idProduct
+            AND id_couleur = :idColor
+            AND id_taille = :idSize;'
+        );
+
+        $stmt->execute([
+            'idUser' => $idUser,
+            'idProduct' => $idProduct,
+            'idColor' => $idColor,
+            'idSize' => $idSize
+        ]);
+    }
+
+    public function removeAllProduct($idUser): void {
+        $stmt = $this->pdo->prepare(
+            'DELETE FROM CONTENU_PANIER
+            WHERE id_panier = (SELECT id_panier FROM PANIER WHERE id_utilisateur = :idUser);'
+        );
+
+        $stmt->execute(['idUser' => $idUser]);
+    }
 }
 ?>

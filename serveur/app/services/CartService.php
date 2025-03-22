@@ -15,5 +15,17 @@ class CartService{
         $cartDAO=new CartDAO($db);
         $cart=$cartDAO->addProduct($idUser,$produitId,$quantity,$idColor,$idSize);
     }
+
+    public static function removeProduct($idUser,$produitId,$idColor,$idSize): void{
+        $db=Database::getConnection();
+        $cartDAO=new CartDAO($db);
+        $cart=$cartDAO->removeProduct($idUser,$produitId,$idColor,$idSize);
+    }
+
+    public static function removeAllProduct($idUser): void{
+        $db=Database::getConnection();
+        $cartDAO=new CartDAO($db);
+        $cart=$cartDAO->removeAllProduct($idUser);
+    }
 }
 ?>
