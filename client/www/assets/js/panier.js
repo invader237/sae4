@@ -2,6 +2,7 @@ import { getCart } from "./core/api/api.js";
 
 function createCartItem(entry) {
     const produit = entry.product;
+    console.log(produit);
     const quantity = entry.quantity;
 
     const item = document.createElement('div');
@@ -10,7 +11,7 @@ function createCartItem(entry) {
     item.innerHTML = `
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${produit.urlImage}?ref_type=heads" 
+                <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${produit.color.urlImage}?ref_type=heads" 
                      class="img-fluid rounded-start h-100" 
                      alt="${produit.label}" 
                      style="object-fit: cover; max-height: 180px;">
@@ -18,10 +19,10 @@ function createCartItem(entry) {
             <div class="col-md-8">
                 <div class="card-body py-2 px-3 d-flex flex-column justify-content-between h-100">
                     <div>
-                        <h6 class="card-title mb-1">${produit.label}</h6>
-                        <p class="card-text mb-1" style="font-size: 0.9rem;">Prix : ${parseFloat(produit.price).toFixed(2)} €</p>
+                        <h6 class="card-title mb-1">${produit.product.label}</h6>
+                        <p class="card-text mb-1" style="font-size: 0.9rem;">Prix : ${parseFloat(produit.product.price).toFixed(2)} €</p>
                         <p class="card-text mb-1" style="font-size: 0.9rem;">Quantité : ${quantity}</p>
-                        <p class="card-text mb-1" style="font-size: 0.9rem;"><strong>Sous-total :</strong> ${(parseFloat(produit.price) * quantity).toFixed(2)} €</p>
+                        <p class="card-text mb-1" style="font-size: 0.9rem;"><strong>Sous-total :</strong> ${(parseFloat(produit.product.price) * quantity).toFixed(2)} €</p>
                     </div>
                     <div class="text-end mt-2">
                         <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${produit.id})">Supprimer</button>
