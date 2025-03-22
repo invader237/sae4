@@ -1,4 +1,4 @@
-import { getCart } from "./core/api/api.js";
+import { getCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
 
 function createCartItem(entry) {
     const produit = entry.product;
@@ -56,7 +56,6 @@ function createCartItem(entry) {
                             <strong>Sous-total :</strong> 
                             <span id="subtotal-${produit.id}">${sousTotal}</span> €
                         </p>
-                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${produit.id})">Supprimer</button>
                     </div>
 
                 </div>
@@ -64,6 +63,17 @@ function createCartItem(entry) {
         </div>
     </div>
     `;
+
+    const removeButton = document.createElement("button");
+    removeButton.className = "btn btn-sm btn-outline-danger";
+    removeButton.textContent = "Supprimer";
+
+    removeButton.addEventListener("click", () => {
+        removeItem(produit.product.id, produit.color.id, produit.size.id); 
+    });
+
+    const actionsContainer = item.querySelector(".d-flex.justify-content-between.align-items-center");
+    actionsContainer.appendChild(removeButton);
 
     return item;
 }
@@ -96,4 +106,23 @@ async function displayCart() {
     footer.style.display = 'block';
 }
 
+
+async function removeItem(id, color, size) {
+    try {
+        await deleteFromCart(id, color, size);
+        await displayCart();
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'article :", error);
+    }
+}
+
 displayCart();
+
+document.getElementById('clear').addEventListener('click', async () => {
+    try {
+        await deleteAllFromCart();
+        await displayCart();
+    } catch (error) {
+        console.error("Erreur lors de la suppression de tous les articles :", error);
+    }
+});
