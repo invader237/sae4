@@ -116,3 +116,27 @@ export const addToCart = async (id, quantity, color, size) => {
         console.error(error);
     }
 }
+
+export const deleteFromCart = async (id, color, size) => {
+    try {
+        const response = await axiosInstance.delete("/deleteProduct", {
+            data: {
+                idProduct: id,
+                idColor: color,
+                idSize: size
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erreur axios delete:", error);
+    }
+};
+
+export const deleteAllFromCart = async () => {
+    try {
+        const response = await axiosInstance.delete("/deleteAllProducts");
+        return response.data;
+    } catch (error) {
+        console.error("Erreur axios delete:", error);
+    }
+}
