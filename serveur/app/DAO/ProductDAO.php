@@ -14,36 +14,77 @@ class ProductDAO
     }
 
     public function getAllProducts(): array {
-        $stmt = $this->pdo->prepare('SELECT * FROM PRODUIT, COULEUR_PRODUIT where COULEUR_PRODUIT.id_produit = PRODUIT.id_produit GROUP BY PRODUIT.id_produit;');
+        $stmt = $this->pdo->prepare('
+            SELECT PRODUIT.id_produit, PRODUIT.designation, PRODUIT.description, PRODUIT.prix, PRODUIT.id_categorie,
+            COULEUR_PRODUIT.id_couleur, COULEUR.libelle as couleur_lib, COULEUR_PRODUIT.reduction as reduc_couleur,
+            COULEUR_PRODUIT.url_image, TAILLE_PRODUIT.id_taille, TAILLE.libelle as taille_lib,
+            TAILLE_PRODUIT.reduction as reduc_taille
+            FROM PRODUIT, COULEUR_PRODUIT, COULEUR, TAILLE_PRODUIT, TAILLE
+            where COULEUR_PRODUIT.id_produit = PRODUIT.id_produit
+            AND COULEUR.id_couleur = COULEUR_PRODUIT.id_couleur
+            AND TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
+            AND TAILLE.id_taille = TAILLE_PRODUIT.id_taille
+            GROUP BY PRODUIT.id_produit;'
+        );
         $stmt->execute();
 
         $products = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $product = new Product($row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']);
+            $product = new ProductDetail(
+                        new Product(
+                            $row['id_produit'],
+                            $row['designation'],
+                            $row['description'],
+                            $row['prix'],
+                            $row['url_image'],
+                            $row['id_categorie']
+                        ),
+                        new Color(
+                            $row["id_couleur"],
+                            $row["couleur_lib"],
+                            $row["reduc_couleur"],
+                            $row["url_image"] 
+                        ),
+                        new Size(
+                            $row["id_taille"],
+                            $row["taille_lib"],
+                            $row["reduc_taille"]
+                        ));
             $products[] = $product;
         }
 
         return $products;
     }
 
-    public function searchProducts($search, $color, $size, $category): array {
-        $sql = "SELECT * FROM PRODUIT 
-                JOIN CATEGORIE ON PRODUIT.id_categorie = CATEGORIE.id_categorie";
+    public function searchProducts($search, $color, $size, $category): array
+    {
+        $sql = '
+            SELECT 
+                PRODUIT.id_produit,
+                PRODUIT.designation,
+                PRODUIT.description,
+                PRODUIT.prix,
+                PRODUIT.id_categorie,
+                COULEUR_PRODUIT.id_couleur,
+                COULEUR.libelle AS couleur_lib,
+                COULEUR_PRODUIT.reduction AS reduc_couleur,
+                COULEUR_PRODUIT.url_image,
+                TAILLE_PRODUIT.id_taille,
+                TAILLE.libelle AS taille_lib,
+                TAILLE_PRODUIT.reduction AS reduc_taille
+            FROM PRODUIT
+            JOIN CATEGORIE ON PRODUIT.id_categorie = CATEGORIE.id_categorie
+            JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit
+            JOIN COULEUR ON COULEUR_PRODUIT.id_couleur = COULEUR.id_couleur
+            LEFT JOIN TAILLE_PRODUIT ON TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
+            LEFT JOIN TAILLE ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille
+        ';
 
-        $params = []; 
-
-        $sql .= " JOIN COULEUR_PRODUIT ON COULEUR_PRODUIT.id_produit = PRODUIT.id_produit
-                  JOIN COULEUR ON COULEUR_PRODUIT.id_couleur = COULEUR.id_couleur";
-
-        if ($size) {
-            $sql .= " JOIN TAILLE_PRODUIT ON TAILLE_PRODUIT.id_produit = PRODUIT.id_produit
-                      JOIN TAILLE ON TAILLE.id_taille = TAILLE_PRODUIT.id_taille";
-        }
-
+        $params = [];
         $conditions = [];
-        
+
         if ($search) {
-            $conditions[] = "CONCAT(designation, ' ', description, ' ', CATEGORIE.libelle) LIKE :search";
+            $conditions[] = "CONCAT(PRODUIT.designation, ' ', PRODUIT.description, ' ', CATEGORIE.libelle) LIKE :search";
             $params[':search'] = "%$search%";
         }
 
@@ -66,16 +107,37 @@ class ProductDAO
             $sql .= " WHERE " . implode(" AND ", $conditions);
         }
 
-        $sql .= " GROUP BY PRODUIT.id_produit";
+        $sql .= ' GROUP BY PRODUIT.id_produit';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
 
         $products = [];
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $products[] = new Product(
-                $row['id_produit'], $row['designation'], $row['description'], $row['prix'], $row['url_image'], $row['id_categorie']
+            $product = new ProductDetail(
+                new Product(
+                    $row['id_produit'],
+                    $row['designation'],
+                    $row['description'],
+                    $row['prix'],
+                    $row['url_image'],
+                    $row['id_categorie']
+                ),
+                new Color(
+                    $row['id_couleur'],
+                    $row['couleur_lib'],
+                    $row['reduc_couleur'],
+                    $row['url_image']
+                ),
+                new Size(
+                    $row['id_taille'] ?? null,
+                    $row['taille_lib'] ?? null,
+                    $row['reduc_taille'] ?? null
+                )
             );
+
+            $products[] = $product;
         }
 
         return $products;
@@ -105,7 +167,6 @@ class ProductDAO
             return null;
         }
 
-        // Assurer que les réductions sont bien des valeurs numériques
         $reductionCouleur = isset($row['reduction_couleur']) ? (float) $row['reduction_couleur'] : 0;
         $reductionTaille = isset($row['reduction_taille']) ? (float) $row['reduction_taille'] : 0;
         $prixFinal = max(0, $row['prix'] - ($reductionCouleur + $reductionTaille)); // Évite un prix négatif

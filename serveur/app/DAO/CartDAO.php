@@ -3,6 +3,7 @@ require_once './app/entity/Cart.php';
 require_once './app/entity/Product.php';
 require_once './app/entity/Color.php';
 require_once './app/entity/Size.php';
+require_once './app/entity/ProductDetail.php';
 
 class CartDAO {
     private $pdo;
@@ -13,47 +14,65 @@ class CartDAO {
 
     public function getCart($idUser) {
         $stmt = $this->pdo->prepare(
-            "SELECT * 
-            FROM PANIER, CONTENU_PANIER, PRODUIT, COULEUR, TAILLE, COULEUR_PRODUIT
-            where CONTENU_PANIER.id_produit = PRODUIT.id_produit
+            "SELECT PANIER.id_panier, PRODUIT.id_produit, PRODUIT.designation, PRODUIT.description,
+            PRODUIT.prix,CONTENU_PANIER.qte, COULEUR_PRODUIT.url_image, PRODUIT.id_categorie,
+            COULEUR.id_couleur, COULEUR.libelle as couleur_lib, COULEUR_PRODUIT.reduction as reduc_couleur, TAILLE.id_taille,
+            TAILLE.libelle as taille_lib, TAILLE_PRODUIT.reduction as reduc_taille
+            FROM PANIER, CONTENU_PANIER, PRODUIT, COULEUR, TAILLE, COULEUR_PRODUIT, TAILLE_PRODUIT
+            WHERE CONTENU_PANIER.id_produit = PRODUIT.id_produit
             AND CONTENU_PANIER.id_couleur = COULEUR.id_couleur
             AND CONTENU_PANIER.id_taille = TAILLE.id_taille
             AND COULEUR_PRODUIT.id_couleur = CONTENU_PANIER.id_couleur
             AND COULEUR_PRODUIT.id_produit = CONTENU_PANIER.id_produit
+            AND TAILLE_PRODUIT.id_taille = CONTENU_PANIER.id_taille
+            AND TAILLE_PRODUIT.id_produit = CONTENU_PANIER.id_produit
             AND PANIER.id_panier = CONTENU_PANIER.id_panier
             AND PANIER.id_utilisateur = :idUser;"
         );
-            $stmt->execute(['idUser' => $idUser]);
+        $stmt->execute(['idUser' => $idUser]);
             
-            if ($stmt->rowCount() === 0) {
-                return null;
+        if ($stmt->rowCount() === 0) {
+            return null;
+        }
+
+        $produits = []; 
+        $id = null;
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            if ($id === null) {
+                $id = $row['id_panier']; 
             }
 
-            $produits = []; 
-            $id = null;
-
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-                if ($id === null) {
-                    $id = $row['id_panier']; 
-                }
-
-                $produit = [
-                    'product' => new Product(
+            $produit = [
+            'product' => 
+                    new ProductDetail(
+                    new Product(
                         $row['id_produit'],
                         $row['designation'],
                         $row['description'],
                         $row['prix'],
                         $row['url_image'],
-                        $row['id_categorie'],
+                        $row['id_categorie']
                     ),
-                    'quantity' => $row['qte']
-                ];
+                    new Color(
+                        $row["id_couleur"],
+                        $row["couleur_lib"],
+                        $row["reduc_couleur"],
+                        $row["url_image"] 
+                    ),
+                    new Size(
+                        $row["id_taille"],
+                        $row["taille_lib"],
+                        $row["reduc_taille"]
+                    )),
+                'quantity' => $row['qte']
+            ];
 
-                $produits[] = $produit;
-            }
+            $produits[] = $produit;
+        }
 
-            return new Cart($id, $idUser, $produits);
+        return new Cart($id, $idUser, $produits);
     }
 
     public function addProduct($idUser, $idProduct, $quantity, $idColor, $idSize): void {
