@@ -40,7 +40,7 @@ class AuthService {
         }
     }
 
-    public static function register($firstName, $name, $brithDate, $email, $pwd, $idTitle) {
+    public static function register($firstName, $name, $birthDate, $email, $pwd, $idTitle) {
         $db = Database::getConnection();
         $userDAO = new UserDAO($db);
         $user = new User(0, $firstName, $name, $birthDate, $email, hash('sha256', $pwd), $idTitle);
