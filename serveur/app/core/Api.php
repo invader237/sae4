@@ -20,4 +20,7 @@ function setupRoutes($router) {
     $router->add('DELETE', '/api/deleteAllProducts', [CartController::class, 'removeAllProduct']);
     $router->add('GET', '/api/getUser', [UserController::class, 'getUser']);
     $router->add('GET', '/api/delivery', [DeliveryController::class, 'getAll']);
+    $router->add('GET', '/api/getColor', [ColorController::class, 'getAll']);
+    $router->add('GET', '/api/getSize', [SizeController::class, 'getAll']);
+
 }
