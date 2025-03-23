@@ -1,4 +1,4 @@
-import { getCart, getUser } from "./core/api/api.js";
+import { getCart, getUser, getDelivery } from "./core/api/api.js";
 
 function createOrderSummaryItem(entry) {
     const { product: produit, quantity } = entry;
@@ -66,6 +66,28 @@ async function displayOrderSummary() {
         summaryContainer.innerHTML = '<p class="text-danger">Erreur lors de l\'affichage de la commande.</p>';
     }
 }
+
+async function displayDeliveryOptions() {
+    const livraisonSelect = document.getElementById("livraison");
+    try {
+        const { data: deliveryOptions = [] } = await getDelivery();
+
+        deliveryOptions.forEach(option => {
+            const { id, label, price } = option;
+            const frais = parseFloat(price).toFixed(2);
+            const optionElement = document.createElement("option");
+            optionElement.value = id;
+            optionElement.textContent = `${label} (${frais} €)`;
+            optionElement.dataset.frais = frais;
+            livraisonSelect.appendChild(optionElement);
+        });
+    } catch (error) {
+        console.error("Erreur lors de la récupération des options de livraison :", error);
+        livraisonSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+    }
+}
+
+displayDeliveryOptions();
 
 function updateTotalWithShipping() {
     const prixTotal = parseFloat(document.getElementById("prixTotal").textContent || 0);

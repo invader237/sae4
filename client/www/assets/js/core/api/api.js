@@ -149,3 +149,12 @@ export const getUser = async () => {
         console.error(error);
     }
 }
+
+export const getDelivery = async () => {
+    try {
+        const response = await axiosInstance.get("/delivery");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
