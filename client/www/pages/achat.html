@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../assets/js/componentsLoader.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=Ad3yDSe5rzqqIQ2U8Y6jmKA6ytYEXCBcn_K3m6-oBSzqV5ZsGoURSe3l4vsasgbFAKdob4QenNd0c7Wj&currency=EUR"></script>
 </head>
 <body class="bg-light">
     <div id="printHeader"></div>
@@ -17,41 +18,38 @@
     <div class="container py-5">
         <div class="row g-5">
 
-            <!-- Récapitulatif de la commande -->
             <div class="col-lg-6">
                 <div class="bg-white rounded shadow p-4 mb-4">
-                    <h2 class="fw-bold mb-4">Récapitulatif de la commande</h2>
-                    <ul id="orderSummaryList" class="list-group overflow-auto mb-4" style="max-height: 500px;"></ul>
+                    <h2 class="fw-bold mb-4">Articles commandés</h2>
+                    <ul id="orderSummaryList" class="list-group overflow-auto mb-4" style="height: 432px;"></ul>
                     <div class="border-top pt-3">
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold">Total articles :</span>
                             <span class="fw-bold"><span id="prixTotal">0</span> €</span>
                         </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <span class="fw-bold">Frais de livraison :</span>
-                            <span class="fw-bold"><span id="livraisonFrais">0</span> €</span>
-                        </div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <span class="fw-bold fs-5">Total à payer :</span>
-                            <span class="fw-bold fs-5 text-success"><span id="totalAPayer">0</span> €</span>
-                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded shadow p-4">
-                    <h2 class="fw-bold mb-3">Moyen de paiement</h2>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="paiement" id="paypal" checked>
-                        <label class="form-check-label" for="paypal">PayPal Sandbox (test)</label>
+                <div class="bg-white rounded shadow p-4 mb-4">
+                    <h2 class="fw-bold mb-3">Type de livraison</h2>
+                    <select class="form-select" id="livraison" style="min-height: 40px;">
+                        <option value="">Chargement en cours</option>
+                    </select>
+                </div>
+
+                <div class="bg-white rounded shadow p-4 mb-4">
+                    <h2 class="fw-bold mb-4">Résumé de paiement</h2>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="fw-bold">Frais de livraison :</span>
+                        <span class="fw-bold"><span id="livraisonFrais">0</span> €</span>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paiement" id="cb" disabled>
-                        <label class="form-check-label text-muted" for="cb">Carte bancaire (bientôt disponible)</label>
+                    <div class="d-flex justify-content-between mt-3">
+                        <span class="fw-bold fs-5">Total à payer :</span>
+                        <span class="fw-bold fs-5 text-success"><span id="totalAPayer">0</span> €</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Informations client -->
             <div class="col-lg-6">
                 <div class="bg-white rounded shadow p-4 mb-4">
                     <h2 class="fw-bold mb-4">Informations client</h2>
@@ -80,14 +78,10 @@
                 </div>
 
                 <div class="bg-white rounded shadow p-4 mb-4">
-                    <h2 class="fw-bold mb-3">Type de livraison</h2>
-                    <select class="form-select" id="livraison" style="min-height: 40px;>
-                        <option value="">Chargement en cours</option>
-                    </select>
-                </div>
-
-                <div class="text-end">
-                    <button class="btn btn-success btn-lg" id="validerCommande">Valider et Payer</button>
+                    <h2 class="fw-bold mb-3">Payer avec PayPal</h2>
+                    <div class="text-center">
+                        <div id="paypal-button-container" class="mt-3"></div>
+                    </div>
                 </div>
             </div>
         </div>
