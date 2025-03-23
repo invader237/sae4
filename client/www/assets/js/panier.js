@@ -1,4 +1,4 @@
-import { getCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
+import { getCart, addToCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
 
 function createCartItem(entry) {
     const { product: produit, quantity } = entry;
@@ -12,22 +12,22 @@ function createCartItem(entry) {
 
     item.innerHTML = `
     <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden p-3">
-        <div class="d-flex flex-row gap-3 align-items-start">
-            <div style="flex: 0 0 300px;">
+        <div class="row g-3">
+            <div class="col-12 col-md-4 text-center">
                 <img src="https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${produit.color.urlImage}?ref_type=heads" 
                      class="img-fluid rounded-3" 
                      alt="${produit.label}" 
-                     style="width: 250px; height: 250px; object-fit: cover; aspect-ratio: 1 / 1;">
+                     style="width: 100%; max-width: 250px; height: auto; object-fit: cover; aspect-ratio: 1 / 1;">
             </div>
-            <div class="flex-grow-1 d-flex flex-column justify-content-space-between gap-4 p-4">
-                <div>
+            <div class="col-12 col-md-8">
+                <div class="d-flex flex-column justify-content-between h-100 gap-3">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-md-6 mb-3 mb-md-0">
                             <h5 class="card-title mb-2">${produit.product.label}</h5>
                             <p class="mb-2 fs-5"><strong>Couleur :</strong> ${produit.color.label || 'N/A'}</p>
                             <p class="mb-2 fs-5"><strong>Taille :</strong> ${produit.size.label || 'Standard'}</p>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-md-6">
                             <p class="mb-2 fs-5">
                                 <strong>Prix unitaire :</strong><br>
                                 ${reduction > 0 
@@ -38,22 +38,20 @@ function createCartItem(entry) {
                             </p>
                             <label for="quantity-${produit.id}" class="form-label mb-1 fs-5">Quantité :</label>
                             <input type="number"
-                                   class="form-control form-control-sm"
+                                   class="form-control form-control-sm w-auto"
                                    id="quantity-${produit.id}"
                                    value="${quantity}"
                                    min="1"
-                                   step="1"
-                                   style="width: 80px;"
-                                   onchange="updateSubtotal(${produit.id}, this.value)">
+                                   step="1">
                         </div>
                     </div>
-                </div>
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-3">
-                    <p class="card-text mb-0 fs-5">
-                        <strong>Sous-total :</strong> 
-                        <span id="subtotal-${produit.id}">${sousTotal}</span> €
-                    </p>
-                    <button class="btn btn-outline-danger fs-5 py-2 px-3">Supprimer</button>
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <p class="card-text mb-0 fs-5">
+                            <strong>Sous-total :</strong> 
+                            <span id="subtotal-${produit.id}">${sousTotal}</span> €
+                        </p>
+                        <button class="btn btn-outline-danger fs-5 py-2 px-3">Supprimer</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,6 +61,14 @@ function createCartItem(entry) {
     const removeButton = item.querySelector(".btn-outline-danger");
     removeButton.addEventListener("click", () => {
         removeItem(produit.product.id, produit.color.id, produit.size.id);
+    });
+
+    const quantityInput = item.querySelector(`#quantity-${produit.id}`);
+    quantityInput.addEventListener("change", async (event) => {
+        const newQuantity = parseInt(event.target.value);
+        if (newQuantity > 0) {
+            await updateQuantity(produit.product.id, newQuantity, produit.color.id, produit.size.id);
+        }
     });
 
     return item;
@@ -113,6 +119,18 @@ async function removeItem(id, color, size) {
         await displayCart();
     } catch (error) {
         console.error("Erreur lors de la suppression de l'article :", error);
+    }
+}
+
+async function updateQuantity(id, newQuantity, color, size) {
+    try {
+        const quantity = parseInt(newQuantity);
+        if (quantity > 0) {
+            await addToCart(id, quantity, size, color);
+            await displayCart();
+        }
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la quantité :", error);
     }
 }
 
