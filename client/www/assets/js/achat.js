@@ -1,4 +1,4 @@
-import { getCart } from "./core/api/api.js";
+import { getCart, getUser } from "./core/api/api.js";
 
 function createOrderSummaryItem(entry) {
     const { product: produit, quantity } = entry;
@@ -8,14 +8,14 @@ function createOrderSummaryItem(entry) {
     const sousTotal = (prixRemise * quantity).toFixed(2);
 
     const item = document.createElement("div");
-    item.classList.add("d-flex", "justify-content-between", "align-items-start", "border-bottom", "pb-2");
+    item.className = "d-flex justify-content-between align-items-start border-bottom pb-2";
 
     item.innerHTML = `
         <div>
             <h6 class="mb-1">${produit.product.label}</h6>
             <p class="mb-1 small text-muted">
-                Couleur : ${produit.color.label || 'N/A'}<br>
-                Taille : ${produit.size.label || 'Standard'}<br>
+                Couleur : ${produit.color?.label || 'N/A'}<br>
+                Taille : ${produit.size?.label || 'Standard'}<br>
                 Quantité : ${quantity}
             </p>
         </div>
@@ -36,15 +36,14 @@ async function displayOrderSummary() {
     const totalSpan = document.getElementById("prixTotal");
 
     try {
-        const response = await getCart();
-        const cart = response?.data?.products;
+        const { data: { products: cart = [] } = {} } = await getCart();
 
-        if (!cart || cart.length === 0) {
+        if (cart.length === 0) {
             summaryContainer.innerHTML = `
                 <div class="alert alert-danger text-center" role="alert">
                     <i class="bi bi-cart-x me-2"></i>Votre commande est vide.
                 </div>`;
-            totalSpan.textContent = '0';
+            totalSpan.textContent = '0.00';
             return;
         }
 
@@ -52,8 +51,7 @@ async function displayOrderSummary() {
         let total = 0;
 
         cart.forEach(entry => {
-            const item = createOrderSummaryItem(entry);
-            summaryContainer.appendChild(item);
+            summaryContainer.appendChild(createOrderSummaryItem(entry));
 
             const prixProduit = parseFloat(entry.product.product.price);
             const reduction = entry.product.discount || 0;
@@ -73,16 +71,72 @@ function updateTotalWithShipping() {
     const prixTotal = parseFloat(document.getElementById("prixTotal").textContent || 0);
     const livraisonSelect = document.getElementById("livraison");
     const selectedOption = livraisonSelect.options[livraisonSelect.selectedIndex];
-    const frais = parseFloat(selectedOption.dataset.frais || 0);
+    const frais = parseFloat(selectedOption?.dataset?.frais || 0);
 
     document.getElementById("livraisonFrais").textContent = frais.toFixed(2);
     document.getElementById("totalAPayer").textContent = (prixTotal + frais).toFixed(2);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    displayOrderSummary();
+    displayUser();
     setTimeout(updateTotalWithShipping, 500);
 });
 
-document.getElementById("livraison").addEventListener("change", updateTotalWithShipping);
+function displayUser() {
+    getUser()
+        .then(({ data: user }) => {
+            document.getElementById("email").textContent = user.email;
+            document.getElementById("nom").textContent = user.name;
+            document.getElementById("prenom").textContent = user.firstName;
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération de l'utilisateur :", error);
+            document.getElementById("email").textContent = 'Utilisateur inconnu';
+        });
+}
 
-window.addEventListener("DOMContentLoaded", displayOrderSummary);
+const map = L.map('map').setView([48.8566, 2.3522], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+}).addTo(map);
+
+let marker;
+
+async function updateMapFromAddress(address) {
+    try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data?.length > 0) {
+            const { lat, lon } = data[0];
+            const latNum = parseFloat(lat);
+            const lonNum = parseFloat(lon);
+
+            map.setView([latNum, lonNum], 15);
+
+            if (!marker) {
+                marker = L.marker([latNum, lonNum]).addTo(map);
+            } else {
+                marker.setLatLng([latNum, lonNum]);
+            }
+
+            marker.bindPopup("Adresse : " + address).openPopup();
+        }
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la carte :", error);
+    }
+}
+
+const adresseInput = document.getElementById('adresse');
+adresseInput?.addEventListener('input', () => {
+    const adresse = adresseInput.value.trim();
+    if (adresse.length > 5) {
+        updateMapFromAddress(adresse);
+    }
+});
+
+document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);

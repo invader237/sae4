@@ -140,3 +140,12 @@ export const deleteAllFromCart = async () => {
         console.error("Erreur axios delete:", error);
     }
 }
+
+export const getUser = async () => {
+    try {
+        const response = await axiosInstance.get("/getUser");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
