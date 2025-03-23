@@ -201,6 +201,23 @@ function watchTotalAndRenderButton() {
     }, 500);
 }
 
-window.addEventListener('DOMContentLoaded', watchTotalAndRenderButton);
+window.addEventListener('DOMContentLoaded', () => {
+    watchTotalAndRenderButton();
+
+    const map = L.map('map', {
+        dragging: false, 
+        zoomControl: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        tap: false,
+        touchZoom: false
+    }).setView([48.8566, 2.3522], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+});
 
 document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);
