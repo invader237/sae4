@@ -9,6 +9,23 @@ class SizeDAO {
         $this->pdo = $pdo;
     }
 
+    public function getAll(): array {
+        $stmt = $this->pdo->prepare(' SELECT * FROM TAILLE ');
+        $stmt->execute();
+
+        $sizes = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $size = new Size(
+                $row['id_taille'],
+                $row['libelle'],
+                -1
+            );
+            $sizes[] = $size;
+        }
+
+        return $sizes;
+    }
+
     public function getSizesByProductId(int $id): array {
         $stmt = $this->pdo->prepare('
             SELECT TAILLE.id_taille, TAILLE.libelle 
