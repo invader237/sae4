@@ -162,16 +162,17 @@ adresseInput?.addEventListener('input', () => {
     }
 });
 
+let paypalRendered = false;
 
-window.addEventListener('DOMContentLoaded', () => {
-    const total = parseFloat(document.getElementById('totalAPayer').textContent);
+function renderPayPalButton(total) {
+    document.getElementById("paypal-button-container").innerHTML = "";
 
     paypal.Buttons({
         createOrder: function(data, actions) {
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: total > 0 ? total.toFixed(2) : '10.00'
+                        value: total.toFixed(2)
                     }
                 }]
             });
@@ -183,6 +184,23 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     }).render('#paypal-button-container');
-});
+
+    paypalRendered = true;
+}
+
+function watchTotalAndRenderButton() {
+    let lastTotal = 0;
+    setInterval(() => {
+        const totalText = document.getElementById('totalAPayer')?.textContent;
+        const total = parseFloat(totalText);
+
+        if (!isNaN(total) && total > 0 && total !== lastTotal) {
+            renderPayPalButton(total);
+            lastTotal = total;
+        }
+    }, 500);
+}
+
+window.addEventListener('DOMContentLoaded', watchTotalAndRenderButton);
 
 document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);
