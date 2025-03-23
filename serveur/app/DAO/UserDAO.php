@@ -9,14 +9,14 @@ class UserDAO {
         $this->pdo = $pdo;
     }
 
-    public function getUserById(int $id): ?User {
-        $stmt = $this->pdo->prepare('SELECT * FROM UTILISATEUR WHERE id_utilisateur = :id');
+    public function getUser(int $id): ?User {
+        $stmt = $this->pdo->prepare('SELECT * FROM UTILISATEUR, CIVILITE WHERE id_utilisateur = :id AND UTILISATEUR.id_civilite = CIVILITE.id_civilite');
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
         if ($row === false) {
             return null;
         }
-        return new User($row['id_utilisateur'], $row['prenom'], $row['nom'], $row['date_naissance'], $row['email'], $row['mdp'], $row['id_civilite']);
+        return new User($row['id_utilisateur'], $row['prenom'], $row['nom'], $row['date_naissance'], $row['email'], "", $row['libelle']);
     }
 
     public function getUserByEmail(string $email): ?User {
