@@ -143,4 +143,8 @@ document.getElementById('clear').addEventListener('click', async () => {
     }
 });
 
+document.getElementById('payer').addEventListener('click', () => {
+    window.location.href = './achat.html';
+});
+
 displayCart();
