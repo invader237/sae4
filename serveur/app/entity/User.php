@@ -74,5 +74,15 @@ class User {
         $this->idTitle = $idTitle;
     }
 
+    public function toArray() {
+        return [
+            "firstName" => $this->firstName,
+            "name" => $this->name,
+            "birthDate" => $this->birthDate,
+            "email" => $this->email,
+            "idTitle" => $this->idTitle
+        ];
+    }
+
 }
 
