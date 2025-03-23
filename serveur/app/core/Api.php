@@ -4,6 +4,7 @@ require_once('./app/controllers/ProductController.php');
 require_once('./app/controllers/SizeController.php');
 require_once('./app/controllers/ColorController.php');
 require_once('./app/controllers/CartController.php');
+require_once('./app/controllers/UserController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
@@ -16,4 +17,5 @@ function setupRoutes($router) {
     $router->add('POST',"/api/addProduit", [CartController::class, "addProduct"]);
     $router->add('DELETE', '/api/deleteProduct', [CartController::class, 'removeProduct']);
     $router->add('DELETE', '/api/deleteAllProducts', [CartController::class, 'removeAllProduct']);
+    $router->add('GET', '/api/getUser', [UserController::class, 'getUser']);
 }
