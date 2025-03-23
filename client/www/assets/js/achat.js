@@ -21,9 +21,9 @@ function createOrderSummaryItem(entry) {
         </div>
         <div class="text-end">
             ${reduction > 0
-                ? `<small class="text-decoration-line-through text-muted">${prixInitial.toFixed(2)} €</small><br>
+            ? `<small class="text-decoration-line-through text-muted">${prixInitial.toFixed(2)} €</small><br>
                    <strong>${prixRemise} €</strong>`
-                : `<strong>${prixInitial.toFixed(2)} €</strong>`}
+            : `<strong>${prixInitial.toFixed(2)} €</strong>`}
             <div class="text-muted small">Sous-total : ${sousTotal} €</div>
         </div>
     `;
@@ -71,6 +71,7 @@ async function displayDeliveryOptions() {
     const livraisonSelect = document.getElementById("livraison");
     try {
         const { data: deliveryOptions = [] } = await getDelivery();
+        livraisonSelect.innerHTML = '';
 
         deliveryOptions.forEach(option => {
             const { id, label, price } = option;
@@ -159,6 +160,29 @@ adresseInput?.addEventListener('input', () => {
     if (adresse.length > 5) {
         updateMapFromAddress(adresse);
     }
+});
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    const total = parseFloat(document.getElementById('totalAPayer').textContent);
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: total > 0 ? total.toFixed(2) : '10.00'
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('Paiement effectué par ' + details.payer.name.given_name);
+                window.location.href = "./confirmation.html";
+            });
+        }
+    }).render('#paypal-button-container');
 });
 
 document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);
