@@ -89,17 +89,17 @@ class ProductDAO
         }
 
         if ($color) {
-            $conditions[] = "COULEUR.libelle = :couleur";
+            $conditions[] = "COULEUR.id_couleur = :couleur";
             $params[':couleur'] = $color;
         }
 
         if ($size && $category !== "Bonnet") {
-            $conditions[] = "TAILLE.libelle = :taille";
+            $conditions[] = "TAILLE.id_taille = :taille";
             $params[':taille'] = $size;
         }
 
         if ($category) {
-            $conditions[] = "CATEGORIE.libelle = :categorie";
+            $conditions[] = "CATEGORIE.id_categorie = :categorie";
             $params[':categorie'] = $category;
         }
 
