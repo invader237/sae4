@@ -6,6 +6,7 @@ require_once('./app/controllers/ColorController.php');
 require_once('./app/controllers/CartController.php');
 require_once('./app/controllers/UserController.php');
 require_once('./app/controllers/DeliveryController.php');
+require_once('./app/controllers/CategoryController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
@@ -22,5 +23,6 @@ function setupRoutes($router) {
     $router->add('GET', '/api/delivery', [DeliveryController::class, 'getAll']);
     $router->add('GET', '/api/getColor', [ColorController::class, 'getAll']);
     $router->add('GET', '/api/getSize', [SizeController::class, 'getAll']);
+    $router->add('GET', '/api/getCategory', [CategoryController::class, 'getAll']);
 
 }
