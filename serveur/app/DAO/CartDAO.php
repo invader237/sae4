@@ -27,7 +27,8 @@ class CartDAO {
             AND TAILLE_PRODUIT.id_taille = CONTENU_PANIER.id_taille
             AND TAILLE_PRODUIT.id_produit = CONTENU_PANIER.id_produit
             AND PANIER.id_panier = CONTENU_PANIER.id_panier
-            AND PANIER.id_utilisateur = :idUser;"
+            AND PANIER.id_utilisateur = :idUser
+            AND PANIER.est_actif = 1;"
         );
         $stmt->execute(['idUser' => $idUser]);
             
