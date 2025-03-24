@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/src/sha256.min.js"></script>
+    <script src="../assets/js/componentsLoader.js"></script>
+    <script src="../assets/js/handleNavBar.js"></script>
 </head>
 
 <body>
@@ -28,5 +30,10 @@
 </body>
 
 <script type="module" src="../assets/js/login.js"></script>
+<script>
+    componentsLoader("../components/header.html", "printHeader");
+    componentsLoader("../components/footer.html", "printFooter");
+    handleNavbar(991.9);
+</script>
 
 </html>
