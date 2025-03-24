@@ -23,9 +23,15 @@ function toggleNavbar(element) {
         // Cache le menu de navigation et affiche le bouton si la taille d'écran est inférieure ou égale à size px
         document.querySelector(".navbar-nav").style.display = "none";
         document.querySelector(".navbar-toggler").style.display = "block";
+        document.getElementById("navbarNav").classList.remove("me-3");
+        document.getElementById("userIcon").style.display = "block";
+        document.getElementById("navUserIcon").style.display = "none";
     } else {
-        // Sinon cache le bouton, affiche le menu de navigation, et réaffiche tous les liens s'ils étaient cachés auparavant
+        // Sinon cache le bouton, affiche le menu de navigation
         document.querySelector(".navbar-nav").style.display = "flex";
         document.querySelector(".navbar-toggler").style.display = "none";
+        document.getElementById("navbarNav").classList.add("me-3");
+        document.getElementById("userIcon").style.display = "none";
+        document.getElementById("navUserIcon").style.display = "block";
     }
 }
