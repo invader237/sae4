@@ -1,5 +1,4 @@
-import { getAllProducts, getAllProductsFilter } from "./core/api/api.js";
-import { addToCart } from "./core/api/api.js";
+import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys } from "./core/api/api.js";
 
 const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
@@ -64,6 +63,48 @@ function displayProducts(products) {
 getAllProducts()
     .then((response) => displayProducts(response.data))
     .catch((error) => console.error("Error loading products:", error));
+
+
+function loadFilters() {
+    const categorySelect = document.getElementById("category");
+    const colorSelect = document.getElementById("color");
+    const sizeSelect = document.getElementById("size");
+
+    getAllCategorys()
+        .then((response) => {
+            response.data.forEach((category) => {
+                const categoryOption = document.createElement("option");
+                categoryOption.value = category.id;
+                categoryOption.textContent = category.label;
+                categorySelect.appendChild(categoryOption);
+            });
+        })
+        .catch((error) => console.error("Erreur lors du chargement des catégories :", error));
+
+    getAllColors()
+        .then((response) => {
+            response.data.forEach((color) => {
+                const colorOption = document.createElement("option");
+                colorOption.value = color.id;
+                colorOption.textContent = color.label;
+                colorSelect.appendChild(colorOption);
+            });
+        })
+        .catch((error) => console.error("Erreur lors du chargement des couleurs :", error));
+
+    getAllSizes()
+        .then((response) => {
+            response.data.forEach((size) => {
+                const sizeOption = document.createElement("option");
+                sizeOption.value = size.id;
+                sizeOption.textContent = size.label;
+                sizeSelect.appendChild(sizeOption);
+            });
+        })
+        .catch((error) => console.error("Erreur lors du chargement des tailles :", error));
+}
+
+loadFilters();
 
 searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
