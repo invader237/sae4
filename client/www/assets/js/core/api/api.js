@@ -158,3 +158,30 @@ export const getDelivery = async () => {
         console.error(error);
     }
 }
+
+export const getAllColors = async () => {
+    try {
+        const response = await axiosInstance.get("/getColor");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getAllSizes = async () => {
+    try {
+        const response = await axiosInstance.get("/getSize");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getAllCategorys = async () => {
+    try {
+        const response = await axiosInstance.get("/getCategory");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
