@@ -1,4 +1,5 @@
 import { getCart, addToCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
+const connected = !!localStorage.getItem("authToken");
 
 function createCartItem(entry) {
     const { product: produit, quantity } = entry;
@@ -147,4 +148,8 @@ document.getElementById('payer').addEventListener('click', () => {
     window.location.href = './achat.html';
 });
 
-displayCart();
+if (connected) {
+    displayCart();
+} else {
+    window.location.href = "./login.html";
+}

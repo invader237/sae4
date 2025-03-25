@@ -2,6 +2,7 @@ import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllCol
 
 const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
+const connected = !!localStorage.getItem("authToken");
 
 function displayProducts(products) {
     const productsContainer = document.getElementById("productsContainer");
@@ -45,12 +46,15 @@ function displayProducts(products) {
         const addToCartButton = productCard.querySelector(".add-to-cart-btn");
         addToCartButton.addEventListener("click", async (event) => {
             event.preventDefault();
-
-            try {
-                await addToCart(productContent.id, 1, size.id, color.id);
-                alert("Produit ajouté au panier !");
-            } catch (error) {
-                console.error("Erreur lors de l'ajout au panier :", error);
+            if (connected) {
+                try {
+                    await addToCart(productContent.id, 1, size.id, color.id);
+                    alert("Produit ajouté au panier !");
+                } catch (error) {
+                    console.error("Erreur lors de l'ajout au panier :", error);
+                }
+            } else {
+                window.location.href = "./login.html";
             }
         });
 

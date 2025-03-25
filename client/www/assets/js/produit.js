@@ -3,6 +3,7 @@ import { addToCart} from "./core/api/api.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
+const connected = !!localStorage.getItem("authToken");
 
 // Initialisation par défaut de la couleur et de la taille
 let color, size;
@@ -86,12 +87,16 @@ async function imprimerSelectionTaille(id_produit, selectedSize) {
 function boutonCommander(id_produit) {
     const bouton = document.querySelector("input[type=button]");
     bouton.addEventListener("click", () => {
-        const nbCommandee = document.getElementById("nbrCommande").valueAsNumber;
-        if (quantiteCommandeeValide(nbCommandee)) {
-            addToCart(id_produit, nbCommandee, size, color);
-            console.log(`Commande de ${nbCommandee} article(s) pour le produit ${id_produit}, couleur ${color}, taille ${size}`);
+        if (connected) {
+            const nbCommandee = document.getElementById("nbrCommande").valueAsNumber;
+            if (quantiteCommandeeValide(nbCommandee)) {
+                addToCart(id_produit, nbCommandee, size, color);
+                console.log(`Commande de ${nbCommandee} article(s) pour le produit ${id_produit}, couleur ${color}, taille ${size}`);
+            } else {
+                alert("Veuillez entrer une quantité valide.");
+            }
         } else {
-            alert("Veuillez entrer une quantité valide.");
+            window.location.href = "./login.html";
         }
     });
 }
