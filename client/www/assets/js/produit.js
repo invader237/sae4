@@ -104,7 +104,7 @@ function boutonCommander(id_produit) {
 function afficherDetails(product, selectedColor = color, selectedSize = size) {
     if (!product) return;
 
-    product.urlImage = product.urlImage.replace(" ", "%20");
+    product.urlImage = product.urlImage.replace(/ /g, "%20");
 
     document.title = `${product.label} - PM2`;
     document.querySelector(".produitDetail h1").textContent = product.label;
