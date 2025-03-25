@@ -185,3 +185,16 @@ export const getAllCategorys = async () => {
         console.error(error);
     }
 }
+
+export const validateOrder = async (idPayment, idDelivery, deliveryAdress) => {
+    try {
+        const response = await axiosInstance.post("/createOrder", {
+            idPayment: idPayment,
+            idDelivery: idDelivery,
+            deliveryAdress: deliveryAdress
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
