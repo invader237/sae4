@@ -8,6 +8,16 @@ function displayProducts(products) {
     const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
 
+    if (products.length === 0) {
+        console.log("Aucun produit trouvé.");
+        productsContainer.innerHTML = `
+            <div class="alert alert-warning text-center fw-bold">
+                Aucun produit ne correspond à votre recherche.
+            </div>
+        `;
+        return;
+    }
+
     products.forEach((product) => {
         const productContent = product.product;
         const color = product.color;
