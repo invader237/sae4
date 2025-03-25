@@ -1,4 +1,4 @@
-import { getCart, getUser, getDelivery } from "./core/api/api.js";
+import { getCart, getUser, getDelivery, validateOrder } from "./core/api/api.js";
 
 function createOrderSummaryItem(entry) {
     const { product: produit, quantity } = entry;
@@ -179,7 +179,10 @@ function renderPayPalButton(total) {
         },
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
-                alert('Paiement effectué par ' + details.payer.name.given_name);
+                const idPayment = details.id;
+                const idDelivery = document.getElementById("livraison").value;
+                const deliveryAdress = document.getElementById("adresse").value;
+                validateOrder(idPayment, idDelivery, deliveryAdress)
                 window.location.href = "./confirmation.html";
             });
         }
