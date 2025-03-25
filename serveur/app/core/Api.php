@@ -26,5 +26,6 @@ function setupRoutes($router) {
     $router->add('GET', '/api/getSize', [SizeController::class, 'getAll']);
     $router->add('GET', '/api/getCategory', [CategoryController::class, 'getAll']);
     $router->add('POST', '/api/createOrder', [OrderController::class, 'validateOrder']);
+    $router->add('GET', '/api/getAllOrders', [OrderController::class, 'getAll']);
 
 }
