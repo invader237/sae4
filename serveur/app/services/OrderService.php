@@ -3,6 +3,14 @@ require_once('./app/services/CartService.php');
 require_once('./app/DAO/OrderDAO.php');
 
 class OrderService {
+
+    public static function getAll($idUser) {
+        $db = Database::getConnection();
+        $orderDAO = new OrderDAO($db);
+        $orders = $orderDAO->getAll($idUser);
+        return $orders;
+    }
+
     public static function validateOrder($idUser, $idPayment, $idDelivery, $deliveryAddress) {
         $db = Database::getConnection();
         $orderDAO = new OrderDAO($db);
@@ -33,4 +41,5 @@ class OrderService {
 
         return $price - $colorDiscount - $sizeDiscount;
     }
+
 }
