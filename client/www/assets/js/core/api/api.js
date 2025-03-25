@@ -186,15 +186,25 @@ export const getAllCategorys = async () => {
     }
 }
 
-export const validateOrder = async (idPayment, idDelivery, deliveryAdress) => {
+export const validateOrder = async (idPayment, idDelivery, deliveryAddress) => {
     try {
         const response = await axiosInstance.post("/createOrder", {
             idPayment: idPayment,
             idDelivery: idDelivery,
-            deliveryAdress: deliveryAdress
+            deliveryAddress: deliveryAddress
         });
         return response.data;
     } catch (error) {
         console.error(error);
     }
 }
+
+export const getOrders = async () => {
+    try {
+        const response = await axiosInstance.get("/getAllOrders");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
