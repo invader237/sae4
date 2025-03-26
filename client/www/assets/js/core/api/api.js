@@ -220,3 +220,36 @@ export const getOrderById = async (id) => {
         console.error(error);
     }
 }
+export const getFavorites=async()=>{
+    try {
+        const response=await axiosInstance.get("/getFavorites");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const addFavorites=async(id, size, color)=>{
+    try {
+        const response=await axiosInstance.post("/addFavorites",{
+            idProduct: id,
+            idSize: size,
+            idColor: color,
+        });
+        return response.data;
+    } catch(error) {
+        console.error(error);
+    }
+}
+export const removeFavorites=async(id,size,color)=>{
+    try {
+        const response=await axiosInstance.post("/removeFavorites",{
+            idProduct: id,
+            idSize: size,
+            idColor: color,
+        });
+        return response.data;
+    } catch(error) {
+        console.error(error);
+    }
+}
