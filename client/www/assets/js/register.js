@@ -1,6 +1,10 @@
-import { login, register } from './core/api/api.js';
+import { login, register, getUser } from './core/api/api.js';
 
-console.log("Scripts loaded");
+const response = await getUser();
+
+if (response !== undefined) {
+    window.location.href = "./profil.html";
+}
 
 const loginForm = document.querySelector("#loginForm");
 const registerForm = document.querySelector("#registerForm");

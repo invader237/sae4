@@ -1,4 +1,10 @@
-import { getOrders } from "./core/api/api.js";
+import { getOrders, getUser } from "./core/api/api.js";
+
+const response = await getUser();
+
+if (response === undefined) {
+    window.location.href = "./login.html";
+}
 
 const tableBody = document.getElementById("ordersTableBody");
 

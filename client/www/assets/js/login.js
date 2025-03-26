@@ -1,6 +1,10 @@
-import { login } from './core/api/api.js';
+import { login, getUser } from './core/api/api.js';
 
-console.log("login.js loaded");
+const response = await getUser();
+
+if (response !== undefined) {
+    window.location.href = "./profil.html";
+}
 
 const loginForm = document.querySelector("#loginForm");
 const errorMessage = document.getElementById("error");
