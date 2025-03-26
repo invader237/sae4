@@ -11,6 +11,13 @@ class OrderService {
         return $orders;
     }
 
+    public static function getOrderById($idUser, $idOrder) {
+        $db = Database::getConnection();
+        $orderDAO = new OrderDAO($db);
+        $products = $orderDAO->getOrderById($idUser, $idOrder);
+        return $products;
+    }
+
     public static function validateOrder($idUser, $idPayment, $idDelivery, $deliveryAddress) {
         $db = Database::getConnection();
         $orderDAO = new OrderDAO($db);
