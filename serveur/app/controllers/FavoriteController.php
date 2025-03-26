@@ -9,11 +9,11 @@ class FavoriteController{
         header('Content-Type: application/json');
 
         $idUser=AuthMiddleware::getUser();
-        $favorite = FavoriteService::getCart($idUser);
+        $favorite = FavoriteService::getFavorites($idUser);
         echo json_encode(["data" => $favorite->toArray()], JSON_UNESCAPED_UNICODE);
     }
 
-    public static function addFavorite() {
+    public static function addFavorites() {
         header('Content-Type: application/json');
         
         $idUser=AuthMiddleware::getUser();
@@ -25,12 +25,12 @@ class FavoriteController{
         $idSize = $data['idSize'] ?? null;
         $idColor = $data['idColor'] ?? null;
 
-        FavoriteService::addFavorite($idUser,$idProduct,$idSize,$idColor);
+        FavoriteService::addFavorites($idUser,$idProduct,$idSize,$idColor);
 
         echo json_encode(["success" => true, "message" => "Produit ajouté ou mis à jour comme favori, avec succès"]);
     }
 
-    public static function removeFavorite(){
+    public static function removeFavorites(){
         header("Content-Type: application/json");
         
         $idUser=AuthMiddleware::getUser();
@@ -42,7 +42,7 @@ class FavoriteController{
         $idColor = $data['idColor'] ?? null;
         $idSize = $data['idSize'] ?? null;
 
-        FavoriteService::removeFavorite($idUser, $produitId, $idColor, $idSize);
+        FavoriteService::removeFavorites($idUser, $produitId, $idColor, $idSize);
 
         echo json_encode(["success" => true, "message" => "Favori supprimé avec succès"]);
     }

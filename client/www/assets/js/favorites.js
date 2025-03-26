@@ -1,37 +1,73 @@
 import { getFavorites, addFavorites, removeFavorites } from "./core/api/api.js";
 
-// Fonction pour charger les favoris et les retourner sous forme de Set
-export async function loadFavorites() {
-    try {
-        const favorites = await getFavorites();  // Récupérer les favoris via l'API
-        return new Set(favorites.map(fav => `${fav.idProduct}-${fav.idSize}-${fav.idColor}`));  // Créer un Set pour éviter les doublons
-    } catch (error) {
-        console.error("Erreur lors du chargement des favoris:", error);
-        return new Set();  // Retourner un Set vide en cas d'erreur
+class Favorites {
+    constructor() {
+        this.favorites = new Set();
+    }
+
+    async load() {
+        try {
+            const response = await getFavorites(); // Récupère les favoris
+            const data = response.data;  // Extraire les données de la réponse
+            console.log(data);
+            data.favoris.forEach(prod => this.favorites.add(`${prod.product.product.id}-${prod.product.size.id}-${prod.product.color.id}`))
+            this.updateFavoriteButtons();
+        } catch (error) {
+            console.error("Erreur lors du chargement des favoris:", error);
+            this.favorites = new Set();
+        }
+    }
+
+    updateFavoriteButtons() {
+        // Trouve tous les boutons d'étoile sur la page et met à jour leur état
+        document.querySelectorAll('.favorite-button').forEach(button => {
+            const productId = button.dataset.productId;
+            const sizeId = button.dataset.sizeId;
+            const colorId = button.dataset.colorId;
+
+            const productKey = `${productId}-${sizeId}-${colorId}`;
+            const isFavorite = this.favorites.has(productKey);
+
+            this.updateButton(button, isFavorite);
+        });
+    }
+
+    async toggle(product, size, color, button) {
+        await this.load();
+        const productKey = `${product.id}-${size.id}-${color.id}`;
+        if (this.favorites.has(productKey)) {
+            await this.remove(product, size, color, button);
+        } else {
+            await this.add(product, size, color, button);
+        }
+    }
+
+    async add(product, size, color, button) {
+        try {
+            await addFavorites(product.id, size.id, color.id);
+            this.favorites.add(`${product.id}-${size.id}-${color.id}`);
+            this.updateButton(button, true);
+        } catch (error) {
+            console.error("Erreur lors de l'ajout aux favoris:", error);
+        }
+    }
+
+    async remove(product, size, color, button) {
+        try {
+            await removeFavorites(product.id, size.id, color.id);
+            this.favorites.delete(`${product.id}-${size.id}-${color.id}`);
+            this.updateButton(button, false);
+        } catch (error) {
+            console.error("Erreur lors de la suppression des favoris:", error);
+        }
+    }
+
+    updateButton(button, isFavorite) {
+        const img = button.querySelector("img");
+        img.src = isFavorite ? "../assets/img/icones/star_plein.png" : "../assets/img/icones/star_vide.png";
+        
     }
 }
 
-// Fonction pour gérer l'ajout et la suppression des favoris
-export async function handleFavorite(productKey, productContent, size, color, favoriteButton) {
-    let favorites = await loadFavorites();  // Charger les favoris actuels
-
-    if (favorites.has(productKey)) {
-        // Si déjà favori, retirer
-        try {
-            await removeFavorites(productContent.id, size.id, color.id);
-            favorites.delete(productKey);  // Supprimer de la liste des favoris
-            favoriteButton.querySelector("img").src = "../assets/img/icones/star-empty.png";  // Changer l'icône en vide
-        } catch (error) {
-            console.error("Erreur lors de la suppression des favoris :", error);
-        }
-    } else {
-        // Si non favori, ajouter
-        try {
-            await addFavorites(productContent.id, size.id, color.id);
-            favorites.add(productKey);  // Ajouter à la liste des favoris
-            favoriteButton.querySelector("img").src = "../assets/img/icones/star-filled.png";  // Changer l'icône en remplie
-        } catch (error) {
-            console.error("Erreur lors de l'ajout des favoris :", error);
-        }
-    }
-}
+export const favoritesManager = new Favorites();
+favoritesManager.load();

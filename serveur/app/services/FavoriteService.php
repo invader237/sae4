@@ -3,22 +3,22 @@ require_once('./app/DAO/FavoriteDAO.php');
 require_once('./app/core/Connexion.php');
 
 class FavoriteService{
-    public static function getFavorite($idUser){
+    public static function getFavorites($idUser){
         $db=Database::getConnection();
         $favoriteDAO=new FavoriteDAO($db);
-        $favorite=$favoriteDAO->getCart($idUser);
+        $favorite=$favoriteDAO->getFavorites($idUser);
         return $favorite;
     }
 
-    public static function addFavorite($idUser,$idProduct,$idSize,$idColor):void{
+    public static function addFavorites($idUser,$idProduct,$idSize,$idColor):void{
         $db=Database::getConnection();
         $favoriteDAO=new FavoriteDAO($db);
-        $favorite=$favoriteDAO->addFavorite($idUser,$idProduct,$idSize,$idColor);
+        $favorite=$favoriteDAO->addFavorites($idUser,$idProduct,$idSize,$idColor);
     }
-    public static function removeFavorite($idUser, $idProduct, $idColor, $idSize):void{
+    public static function removeFavorites($idUser, $idProduct, $idColor, $idSize):void{
         $db=Database::getConnection();
         $favoriteDAO=new FavoriteDAO($db);
-        $favorite=$favoriteDAO->removeFavorite($idUser, $idProduct, $idColor, $idSize);
+        $favorite=$favoriteDAO->removeFavorites($idUser, $idProduct, $idColor, $idSize);
     }
     public static function removeAllFavorites($idUser):void{
         $db=Database::getConnection();

@@ -3,7 +3,7 @@ require_once('./app/entity/Favorite.php');
 require_once ('./app/entity/Product.php');
 require_once ('./app/entity/Color.php');
 require_once ('./app/entity/Size.php');
-require_once ('./app/entity/ProductDetail.php')
+require_once ('./app/entity/ProductDetail.php');
 
 
 class FavoriteDAO{
@@ -16,15 +16,20 @@ class FavoriteDAO{
     public function getFavorites($idUser){
         $stmt = $this->pdo->prepare(
             'SELECT 
-                p.id_produit, p.designation, p.description, p.prix, p.id_categorie,
-                c.id_couleur, c.libelle AS couleur_lib,
-                t.id_taille, t.libelle AS taille_lib
-            FROM CONTENU_FAVORIS cf
-            JOIN FAVORIS f ON cf.id_favoris = f.id_favoris
-            JOIN PRODUIT p ON cf.id_produit = p.id_produit
-            JOIN COULEUR c ON cf.id_couleur = c.id_couleur
-            JOIN TAILLE t ON cf.id_taille = t.id_taille
-            WHERE f.id_utilisateur = :idUser;'
+            p.id_produit, p.designation, p.description, p.prix, 
+            cp.url_image, 
+            p.id_categorie,
+            c.id_couleur, c.libelle AS couleur_lib, 
+            cp.reduction AS reduc_couleur,
+            t.id_taille, t.libelle AS taille_lib, 
+            tp.reduction AS reduc_taille
+        FROM FAVORIS f
+        JOIN PRODUIT p ON f.id_produit = p.id_produit
+        JOIN COULEUR c ON f.id_couleur = c.id_couleur
+        JOIN COULEUR_PRODUIT cp ON p.id_produit = cp.id_produit AND f.id_couleur = cp.id_couleur
+        JOIN TAILLE t ON f.id_taille = t.id_taille
+        JOIN TAILLE_PRODUIT tp ON p.id_produit = tp.id_produit AND f.id_taille = tp.id_taille
+        WHERE f.id_utilisateur = :idUser;'
         );
 
         $stmt->execute(['idUser' => $idUser]);
@@ -62,27 +67,24 @@ class FavoriteDAO{
         return new Favorite($idUser, $favoris);
     }
 
-    public function addFavorite($idUser,$idProduct,$idSize,$idColor){
+    public function addFavorites($idUser,$idProduct,$idSize,$idColor){
         $stmt = $this->pdo->prepare(           
-           'INSERT INTO CONTENU_FAVORIS (id_favoris, id_produit, id_taille, id_couleur) 
-            SELECT f.id_favoris, :idProduct, :idSize, :idColor
-            FROM FAVORIS f
-            WHERE f.id_utilisateur = :idUser;'
+           'INSERT INTO FAVORIS (id_utilisateur, id_produit, id_taille, id_couleur) 
+            VALUES (:idUser, :idProduct, :idSize, :idColor)'
         );
 
         $stmt->execute([
             'idUser' => $idUser,
             'idProduct' => $idProduct,
-            'quantity' => $quantity,
             'idColor' => $idColor,
             'idSize' => $idSize
         ]);
     }
 
-    public function removeFavorite($idUser, $idProduct, $idColor, $idSize): void {
+    public function removeFavorites($idUser, $idProduct, $idColor, $idSize): void {
         $stmt = $this->pdo->prepare(
-            'DELETE FROM CONTENU_FAVORIS
-            WHERE id_favoris = (SELECT id_favoris FROM FAVORIS WHERE id_utilisateur = :idUser)
+            'DELETE FROM FAVORIS
+            WHERE id_utilisateur = :idUser
             AND id_produit = :idProduct
             AND id_couleur = :idColor
             AND id_taille = :idSize;'
@@ -98,8 +100,8 @@ class FavoriteDAO{
 
     public function removeAllFavorites($idUser): void {
         $stmt = $this->pdo->prepare(
-            'DELETE FROM CONTENU_FAVORIS
-            WHERE id_favoris = (SELECT id_favoris FROM FAVORIS WHERE id_utilisateur = :idUser);'
+            'DELETE FROM FAVORIS
+            WHERE id_utilisateur = :idUser;'
         );
 
         $stmt->execute(['idUser' => $idUser]);

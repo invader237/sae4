@@ -259,6 +259,7 @@ export const changePassword = async (oldPassword, newPassword) => {
 
 export const addFavorites=async(id, size, color)=>{
     try {
+        console.log("Ajout aux favoris:", { id, size, color });
         const response=await axiosInstance.post("/addFavorites",{
             idProduct: id,
             idSize: size,
@@ -272,13 +273,23 @@ export const addFavorites=async(id, size, color)=>{
 
 export const removeFavorites=async(id,size,color)=>{
     try {
-        const response=await axiosInstance.post("/removeFavorites",{
+        console.log("Retrait des favoris favoris:", { id, size, color });
+        const response=await axiosInstance.delete("/removeFavorites",{
             idProduct: id,
             idSize: size,
             idColor: color,
         });
         return response.data;
     } catch(error) {
+        console.error(error);
+    }
+}
+
+export const removeAllFavorites=async()=>{
+    try {
+        const response=await axiosInstance.get("/removeAllFavorites");
+        return response.data;
+    } catch (error) {
         console.error(error);
     }
 }
