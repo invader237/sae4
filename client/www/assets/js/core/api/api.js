@@ -208,3 +208,15 @@ export const getOrders = async () => {
     }
 }
 
+export const getOrderById = async (id) => {
+    try {
+        const response = await axiosInstance.get("/getOrderById", {
+            params: {
+                idOrder: id
+            }
+       });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
