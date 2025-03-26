@@ -10,7 +10,6 @@
         <link rel="stylesheet" href="../assets/css/commande.css" />
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="../assets/js/componentsLoader.js"></script>
-        <script src="../assets/js/header.js" type="module"></script>
     </head>
 <body class="bg-light">
     <div id="printHeader"></div>
@@ -33,7 +32,6 @@
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
-                        <!-- Les lignes de commande seront injectées ici dynamiquement -->
                     </tbody>
                 </table>
             </div>
@@ -47,5 +45,6 @@
         componentsLoader("../components/footer.html", "printFooter");
     </script>
     <script src="../assets/js/commande.js" type="module"></script>
+    <script src="../assets/js/header.js" type="module"></script>
 </body>
 </html>
