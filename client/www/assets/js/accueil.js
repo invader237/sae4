@@ -1,4 +1,6 @@
-import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser } from "./core/api/api.js";
+import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser, getFavorites } from "./core/api/api.js";
+import {favoritesManager} from "./favorites.js"
+
 
 const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
@@ -45,6 +47,9 @@ function displayProducts(products) {
                 <h5 class="card-title">${productContent.label || 'Produit'}</h5>
                 <p class="card-text"> ${(Number(productContent.price) || 0).toFixed(2)} €</p>
                 <div class="d-flex justify-content-end mt-auto">
+                    <button class= "btn btn-success add-to-fav-btn">
+                        <img src="../assets/img/icones/star_vide.png" style="width: 20px; height: 20px; margin: 5px;" alt="Ajouter aux favoris">
+                    </button>
                     <button class="btn btn-success add-to-cart-btn">
                         <img src="../assets/img/icones/shopping-cart.png" style="width: 20px; height: 20px; margin: 5px;" alt="Ajouter au panier">
                     </button>
@@ -67,6 +72,21 @@ function displayProducts(products) {
                 window.location.href = "./login.html";
             }
         });
+
+        const addtoFavButton = productCard.querySelector(".add-to-fav-btn");
+        addtoFavButton.addEventListener("click", async (event)=> {
+            event.preventDefault();
+            const user = await getUser();
+            if (user !==undefined) {
+                try {
+                    favoritesManager.toggle(productContent, size, color, addtoFavButton);
+                } catch (error) {
+                    console.error("Erreur lors de l'ajout comme favori : ", error);
+                }
+            }   else {
+                window.location.href="./login.html";
+            }
+        })
 
         productLink.appendChild(productCard);
         productCardContainer.appendChild(productLink);
