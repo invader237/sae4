@@ -7,29 +7,32 @@
     <title>Profil</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
     <script src="../assets/js/componentsLoader.js"></script>
-    <script src="../assets/js/header.js" type="module"></script>
+    <script src="../assets/js/profil.js" type="module"></script>
 </head>
 
 <body>
     <header id="printHeader"></header>
 
-    <div id="infoCard">
-        <h1>Informations du compte</h1>
-        <p>Nom : <span id="lastName"></span></p>
-        <p>Prénom : <span id="firstName"></span></p>
-        <p>Adresse e-mail : <span id="mail"></span></p>
-        <p>Vous êtes connecté en tant que : <span id="login"></span></p>
-        <p>Date de naissance : <span id="birthDate"></span></p>
-        <br><br>
-        <a href="changer_mdp.html" class="form_button">Changer le mot de passe</a>
-        <a href="logout.html" class="form_button">Déconnexion</a>
+    <div class="container d-flex justify-content-center mt-5 mb-4">
+        <div id="infoCard" class="card shadow p-4" style="max-width: 500px; background-color: lightgray;">
+            <h1 class="text-center">Informations du compte</h1>
+            <hr>
+            <p><strong>Nom :</strong> <span id="name"></span></p>
+            <p><strong>Prénom :</strong> <span id="firstName"></span></p>
+            <p><strong>Civilité :</strong> <span id="civ"></span></p>
+            <p><strong>Adresse e-mail :</strong> <span id="mail"></span></p>
+            <p><strong>Date de naissance :</strong> <span id="birthDate"></span></p>
+            <div class="d-grid gap-2 mt-3">
+                <a href="changer_mdp.html" class="btn btn-primary">Changer le mot de passe</a>
+                <a href="logout.html" class="btn btn-danger">Déconnexion</a>
+            </div>
+        </div>
     </div>
 
     <footer id="printFooter"></footer>
