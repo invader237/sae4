@@ -1,5 +1,4 @@
-import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId } from "./core/api/api.js";
-import { addToCart} from "./core/api/api.js";
+import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId, getUser, getSku } from "./core/api/api.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
@@ -101,8 +100,10 @@ function boutonCommander(id_produit) {
     });
 }
 
-function afficherDetails(product, selectedColor = color, selectedSize = size) {
+async function afficherDetails(product, selectedColor = color, selectedSize = size) {
     if (!product) return;
+
+    const sku = await getSku(id, size, color);
 
     product.urlImage = product.urlImage.replace(/ /g, "%20");
 
@@ -113,6 +114,9 @@ function afficherDetails(product, selectedColor = color, selectedSize = size) {
     document.getElementById("sku").textContent = "Work in progress";
     document.getElementById("prix").textContent = product.price;
     document.getElementById("prix_tot").textContent = product.price;
+
+    document.getElementById("nbrStock").textContent = sku.data.stock;
+    document.getElementById("sku").textContent = sku.data.label;
 
     imprimerSelectionCouleur(product.id, selectedColor);
     imprimerSelectionTaille(product.id, selectedSize);

@@ -220,3 +220,18 @@ export const getOrderById = async (id) => {
         console.error(error);
     }
 }
+
+export const getSku = async (id, idSize, idColor) => {
+    try {
+        const response = await axiosInstance.get("/getSku", {
+            params: {
+                id: id,
+                idSize: idSize,
+                idColor: idColor
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
