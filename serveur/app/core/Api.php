@@ -8,6 +8,7 @@ require_once('./app/controllers/UserController.php');
 require_once('./app/controllers/DeliveryController.php');
 require_once('./app/controllers/CategoryController.php');
 require_once('./app/controllers/OrderController.php');
+require_once('./app/controllers/SkuController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
@@ -28,5 +29,6 @@ function setupRoutes($router) {
     $router->add('POST', '/api/createOrder', [OrderController::class, 'validateOrder']);
     $router->add('GET', '/api/getAllOrders', [OrderController::class, 'getAll']);
     $router->add('GET', '/api/getOrderById', [OrderController::class, 'getOrderById']);
+    $router->add('GET', '/api/getSku', [SkuController::class, 'getSkusByColorAndSize']);
 
 }
