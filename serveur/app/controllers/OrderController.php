@@ -22,6 +22,29 @@ class OrderController {
         }
     }
 
+    public static function getOrderById() {
+        header('Content-Type: application/json');
+
+        $idUser = AuthMiddleware::getUser();
+        $idOrder = $_GET['idOrder'] ?? null;
+
+        if (!$idOrder) {
+            http_response_code(400);
+            echo json_encode(["message" => "L'id de la commande est requis"]);
+            return;
+        }
+
+        $order = OrderService::getOrderById($idUser, $idOrder);
+
+        if ($order) {
+            $order = array_merge(['order' => $order['order']->toArray()], ['total' => $order['total']]);
+            echo json_encode(["data" => $order], JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Une erreur interne est survenue. Veuillez réessayer plus tard."]);
+        }
+    }
+
     public static function validateOrder() {
         header('Content-Type: application/json');
 
