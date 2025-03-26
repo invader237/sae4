@@ -1,8 +1,7 @@
-import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys } from "./core/api/api.js";
+import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser } from "./core/api/api.js";
 
 const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
-const connected = !!localStorage.getItem("authToken");
 
 function displayProducts(products) {
     const productsContainer = document.getElementById("productsContainer");
@@ -56,7 +55,8 @@ function displayProducts(products) {
         const addToCartButton = productCard.querySelector(".add-to-cart-btn");
         addToCartButton.addEventListener("click", async (event) => {
             event.preventDefault();
-            if (connected) {
+            const user = await getUser();
+            if (user !== undefined) {
                 try {
                     await addToCart(productContent.id, 1, size.id, color.id);
                     alert("Produit ajouté au panier !");
