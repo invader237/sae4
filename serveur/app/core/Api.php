@@ -27,5 +27,6 @@ function setupRoutes($router) {
     $router->add('GET', '/api/getCategory', [CategoryController::class, 'getAll']);
     $router->add('POST', '/api/createOrder', [OrderController::class, 'validateOrder']);
     $router->add('GET', '/api/getAllOrders', [OrderController::class, 'getAll']);
+    $router->add('GET', '/api/getOrderById', [OrderController::class, 'getOrderById']);
 
 }
