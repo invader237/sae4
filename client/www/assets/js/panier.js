@@ -1,5 +1,10 @@
-import { getCart, addToCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
-const connected = !!localStorage.getItem("authToken");
+import { getCart, getUser, addToCart, deleteFromCart, deleteAllFromCart } from "./core/api/api.js";
+
+const response = await getUser();
+
+if (response === undefined) {
+    window.location.href = "./login.html";
+}
 
 function createCartItem(entry) {
     const { product: produit, quantity } = entry;
@@ -148,8 +153,4 @@ document.getElementById('payer').addEventListener('click', () => {
     window.location.href = './achat.html';
 });
 
-if (connected) {
-    displayCart();
-} else {
-    window.location.href = "./login.html";
-}
+displayCart();
