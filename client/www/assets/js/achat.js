@@ -1,5 +1,11 @@
 import { getCart, getUser, getDelivery, validateOrder } from "./core/api/api.js";
 
+const response = await getUser();
+
+if (response === undefined) {
+    window.location.href = "./login.html";
+}
+
 function createOrderSummaryItem(entry) {
     const { product: produit, quantity } = entry;
     const prixInitial = parseFloat(produit.product.price);

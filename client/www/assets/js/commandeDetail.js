@@ -1,5 +1,11 @@
 import { getOrderById, getUser } from "./core/api/api.js";
 
+const response = await getUser();
+
+if (response === undefined) {
+    window.location.href = "./login.html";
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const orderId = urlParams.get("id");
 
