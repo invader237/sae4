@@ -1,5 +1,7 @@
-import { addToCart, getUser, removeAllFavorites } from "./core/api/api.js";
+import { addToCart, getUser, removeAllFavorites, getFavorites } from "./core/api/api.js";
 import { favoritesManager } from "./favorites.js"
+
+const response = await getUser();
 
 if (response === undefined) {
     window.location.href = "./login.html";
@@ -22,7 +24,9 @@ clearButton.addEventListener("click", async (event) => {
     }
 });
 
-function displayProducts(products) {
+function displayProducts(response) {
+    const products = response.data.favoris; // Accédez à 'favoris' depuis 'data'
+    console.log(products);
     favoritesManager.load();
     const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
@@ -37,10 +41,15 @@ function displayProducts(products) {
         return;
     }
 
-    products.forEach((product) => {
-        const productContent = product.product;
-        const color = product.color;
-        const size = product.size;
+    products.forEach((item) => {
+        const productContent = item.product.product || {};
+        const color = item.product.color || {};
+        const size = item.product.size || {};
+
+        if (!productContent.id || !color.id || !size.id) {
+            console.error("Les informations du produit, de la couleur ou de la taille sont manquantes.");
+            return; // Ignore le produit s'il manque des informations essentielles
+        }
 
         const productCardContainer = document.createElement("div");
         productCardContainer.classList.add("col-lg-3", "col-md-4", "col-sm-6", "col-12");
@@ -98,19 +107,19 @@ function displayProducts(products) {
         addtoFavButton.addEventListener("click", async (event)=> {
             event.preventDefault();
             const user = await getUser();
-            if (user !==undefined) {
+            if (user !== undefined) {
                 try {
                     favoritesManager.toggle(productContent, size, color, addtoFavButton);
                     getFavorites()
-                        .then((response) => displayProducts(response.data))
+                        .then((response) => displayProducts(response))  // Pass the whole response object
                         .catch((error) => console.error("Error loading products:", error));
                 } catch (error) {
                     console.error("Erreur lors de l'ajout comme favori : ", error);
                 }
-            }   else {
+            } else {
                 window.location.href="./login.html";
             }
-        })
+        });
 
         productLink.appendChild(productCard);
         productCardContainer.appendChild(productLink);
@@ -119,5 +128,5 @@ function displayProducts(products) {
 }
 
 getFavorites()
-    .then((response) => displayProducts(response.data))
+    .then((response) => displayProducts(response))  // Pass the whole response object
     .catch((error) => console.error("Error loading products:", error));
