@@ -26,4 +26,13 @@ class SkuDAO {
 
         return $sku;
     }
+
+    public function reduceStock($id, $idColor, $idSize, $quantity) {
+        $stmt = $this->pdo->prepare('
+            UPDATE SKU
+            SET stock = stock - :quantity
+            WHERE id_produit = :id AND id_couleur_produit = :idColor AND id_taille_produit = :idSize
+        ');
+        $stmt->execute(['id' => $id, 'idColor' => $idColor, 'idSize' => $idSize, 'quantity' => $quantity]);
+    }
 }

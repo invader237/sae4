@@ -1,6 +1,7 @@
 <?php
 require_once('./app/services/CartService.php');
 require_once('./app/DAO/OrderDAO.php');
+require_once('./app/services/SkuService.php');
 
 class OrderService {
 
@@ -34,6 +35,10 @@ class OrderService {
         $order = new Order( -1, $idUser, $idPayment, $idDelivery, $deliveryAddress, $currentDate, $cartProducts);
 
         $order = $orderDAO->createOrder($order);
+
+        foreach ($cartProducts as $productEntry) {
+            SkuService::reduceStock($productEntry['product']->getProduct()->getId(), $productEntry['product']->getColor()->getId(), $productEntry['product']->getSize()->getId(), $productEntry['quantity']);
+        }
 
         CartService::removeAllProduct($idUser);
 
