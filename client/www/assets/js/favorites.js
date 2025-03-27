@@ -9,7 +9,6 @@ class Favorites {
         try {
             const response = await getFavorites(); // Récupère les favoris
             const data = response.data;  // Extraire les données de la réponse
-            console.log(data)
             data.favoris.forEach(prod => this.favorites.add(`${prod.product.product.id}-${prod.product.size.id}-${prod.product.color.id}`))
             this.updateFavoriteButtons();
         } catch (error) {
@@ -119,6 +118,7 @@ class Favorites {
             this.updateButton(button, isFavorite);
         });
     }
+
     updateButton(button, isFavorite) {
         const img = button.querySelector("img");
         img.src = isFavorite ? "../assets/img/icones/star_plein.png" : "../assets/img/icones/star_vide.png";

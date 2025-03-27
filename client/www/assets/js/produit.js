@@ -7,8 +7,7 @@ const id = urlParams.get("id");
 let color, size;
 const button=document.querySelector(".add-to-fav-btn");
 
-(async function init() {
-  try {
+(async () => {
     const colorDefault = await getColorsByProductId(id);
     color = colorDefault.data?.[0]?.id;
 
@@ -22,8 +21,6 @@ const button=document.querySelector(".add-to-fav-btn");
     try {
         const response = await getProductByIdAndColorAndSize(id, color, size);
         afficherDetails(response.data);
-        favoritesManager.loadDetails();
-
     } catch (error) {
         console.error("Erreur lors du chargement des détails produit:", error);
     }
@@ -148,6 +145,7 @@ async function afficherDetails(product, selectedColor = color, selectedSize = si
   mettreAJourPrixTotal(parseFloat(product.price), sku.data.stock);
 
   favoritesManager.updateFavoriteButtons();
+  favoritesManager.loadDetails();
 }
 
 const addtoFavButton = document.querySelector(".add-to-fav-btn");
