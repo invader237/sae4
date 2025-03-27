@@ -6,6 +6,8 @@ const searchForm = document.querySelector("#searchForm");
 const productsContainer = document.getElementById("productsContainer");
 
 function displayProducts(products) {
+    
+    favoritesManager.load();
     const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
 
@@ -47,7 +49,10 @@ function displayProducts(products) {
                 <h5 class="card-title">${productContent.label || 'Produit'}</h5>
                 <p class="card-text"> ${(Number(productContent.price) || 0).toFixed(2)} €</p>
                 <div class="d-flex justify-content-end mt-auto">
-                    <button class= "btn btn-success add-to-fav-btn">
+                    <button class= "btn btn-success add-to-fav-btn" 
+                        data-product-id="${productContent.id}" 
+                        data-size-id="${size.id}" 
+                        data-color-id="${color.id}">
                         <img src="../assets/img/icones/star_vide.png" style="width: 20px; height: 20px; margin: 5px;" alt="Ajouter aux favoris">
                     </button>
                     <button class="btn btn-success add-to-cart-btn">
