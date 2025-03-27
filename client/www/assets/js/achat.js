@@ -37,8 +37,7 @@ function displayUser(user) {
 function createOrderSummaryItem(entry) {
     const { product: produit, quantity } = entry;
     const prixInitial = parseFloat(produit.product.price);
-    const reduction = produit.discount || 0;
-    const prixRemise = (prixInitial * (1 - reduction)).toFixed(2);
+    const prixRemise = (prixInitial - produit.size.discount - produit.color.discount).toFixed(2);
     const sousTotal = (prixRemise * quantity).toFixed(2);
 
     const item = document.createElement("div");
@@ -54,10 +53,7 @@ function createOrderSummaryItem(entry) {
             </p>
         </div>
         <div class="text-end">
-            ${reduction > 0
-            ? `<small class="text-decoration-line-through text-muted">${prixInitial.toFixed(2)} €</small><br>
-                   <strong>${prixRemise} €</strong>`
-            : `<strong>${prixInitial.toFixed(2)} €</strong>`}
+            <strong>${prixRemise} €</strong>
             <div class="text-muted small">Sous-total : ${sousTotal} €</div>
         </div>
     `;
@@ -88,8 +84,7 @@ async function displayOrderSummary() {
             summaryContainer.appendChild(createOrderSummaryItem(entry));
 
             const prixProduit = parseFloat(entry.product.product.price);
-            const reduction = entry.product.discount || 0;
-            const prixRemise = prixProduit * (1 - reduction);
+            const prixRemise = prixProduit - entry.product.size.discount - entry.product.color.discount;
             total += prixRemise * entry.quantity;
         });
 
