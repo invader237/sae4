@@ -21,8 +21,8 @@ function createCartItem(entry) {
     const { product: produit, quantity } = entry;
 
     const prixInitial = parseFloat(produit.product.price);
-    const reduction = produit.discount || 0;
-    const prixRemise = (prixInitial * (1 - reduction)).toFixed(2);
+    const prixRemise = (prixInitial - produit.color.discount - produit.size.discount).toFixed(2);
+    const prixTotal = (prixRemise * quantity).toFixed(2);
 
     const item = document.createElement('div');
 
@@ -62,11 +62,7 @@ function createCartItem(entry) {
                             <div class="col-12 col-md-6">
                                 <p class="mb-2 fs-5">
                                     <strong>Prix unitaire :</strong><br>
-                                    ${reduction > 0 
-                                        ? `<span class="text-decoration-line-through text-muted">${prixInitial.toFixed(2)} €</span> 
-                                           <span class="text-danger fw-semibold ms-1">${prixRemise} €</span>` 
-                                        : `<span class="fw-semibold">${prixInitial.toFixed(2)} €</span>`
-                                    }
+                                    <span id="prix-${produit.id}">${prixRemise}</span> €
                                 </p>
                                 <label for="quantity-${produit.id}" class="form-label mb-1 fs-5">Quantité :</label>
                                 <input type="number"
@@ -141,8 +137,7 @@ async function displayCart() {
             const item = createCartItem(entry);
             panierContainer.appendChild(item);
             const prixProduit = parseFloat(entry.product.product.price);
-            const reduction = entry.product.discount || 0;
-            const prixRemise = prixProduit * (1 - reduction);
+            const prixRemise = prixProduit - entry.product.size.discount - entry.product.color.discount;
             total += prixRemise * entry.quantity;
         });
 
