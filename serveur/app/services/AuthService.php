@@ -46,4 +46,24 @@ class AuthService {
         $user = new User(0, $firstName, $name, $birthDate, $email, hash('sha256', $pwd), $idTitle);
         $userDAO->createUser($user);
     }
+
+    public static function changePassword($id, $oldPwd, $newPwd) {
+        $db = Database::getConnection();
+        $userDAO = new UserDAO($db);
+        $user = $userDAO->getUserById($id);
+
+        if ($user === null) {
+            return false;
+        }
+
+        $hashedOldPwd = hash('sha256', $oldPwd);
+
+        if ($hashedOldPwd !== $user->getPwd()) {
+            return false;
+        }
+
+        $user->setPwd(hash('sha256', $newPwd));
+        $userDAO->updatePassword($user);
+        return true;
+    }
 }
