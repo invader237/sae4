@@ -235,3 +235,15 @@ export const getSku = async (id, idSize, idColor) => {
         console.error(error);
     }
 }
+
+export const changePassword = async (oldPassword, newPassword) => {
+    try {
+        const response = await axiosInstance.put("/auth/changePassword", {
+            oldPassword: oldPassword,
+            newPassword: newPassword
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
