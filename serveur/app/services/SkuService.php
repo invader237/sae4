@@ -10,4 +10,10 @@ class SkuService {
         return $sku;
     }
 
+    public static function reduceStock($id, $idColor, $idSize, $quantity) {
+        $db = Database::getConnection();
+        $skuDAO = new SkuDAO($db);
+        $skuDAO->reduceStock($id, $idColor, $idSize, $quantity);
+    }
+
 }
