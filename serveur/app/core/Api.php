@@ -9,6 +9,7 @@ require_once('./app/controllers/DeliveryController.php');
 require_once('./app/controllers/CategoryController.php');
 require_once('./app/controllers/OrderController.php');
 require_once('./app/controllers/SkuController.php');
+require_once('./app/controllers/FavoriteController.php');
 
 function setupRoutes($router) {
     $router->add('POST', "/api/auth/login", [AuthController::class, 'login']);
@@ -31,5 +32,13 @@ function setupRoutes($router) {
     $router->add('GET', '/api/getOrderById', [OrderController::class, 'getOrderById']);
     $router->add('GET', '/api/getSku', [SkuController::class, 'getSkusByColorAndSize']);
     $router->add('PUT', '/api/auth/changePassword', [AuthController::class, 'changePassword']);
+    $router->add('GET', '/api/getFavorites', [FavoriteController::class, 'getFavorites']);
+    $router->add('POST', '/api/addFavorites', [FavoriteController::class, 'addFavorites']);
+    $router->add('DELETE', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
+    $router->add('DELETE', '/api/removeAllFavorites', [FavoriteController::class, 'removeAllFavorites']);
+    $router->add('GET', '/api/getFavorites', [FavoriteController::class, 'getFavorites']);
+    $router->add('POST', '/api/addFavorites', [FavoriteController::class, 'addFavorites']);
+    $router->add('DELETE', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
+    $router->add('DELETE', '/api/removeAllFavorites', [FavoriteController::class, 'removeAllFavorites']);
 
 }

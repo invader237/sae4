@@ -1,33 +1,58 @@
-import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser } from "./core/api/api.js";
-import {favoritesManager} from "./favorites.js"
+import { addToCart, getUser, removeAllFavorites, getFavorites } from "./core/api/api.js";
+import { favoritesManager } from "./favorites.js"
 
+const response = await getUser();
 
-const searchForm = document.querySelector("#searchForm");
-const productsContainer = document.getElementById("productsContainer");
+if (response === undefined) {
+    window.location.href = "./login.html";
+}
 
-function displayProducts(products) {
-    
+const clearButton = document.getElementById("clear");
+clearButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    if (user !== undefined) {
+        try {
+            removeAllFavorites();
+            getFavorites()
+                .then((response) => displayProducts(response.data))
+                .catch((error) => console.error("Error loading products:", error));
+        } catch (error) {
+            console.error("Erreur lors de l'ajout au panier :", error);
+        }
+    } else {
+        window.location.href = "./login.html";
+    }
+});
+
+function displayProducts(response) {
+    const products = response.data.favoris; // Accédez à 'favoris' depuis 'data'
     favoritesManager.load();
     const productsContainer = document.getElementById("productsContainer");
+    productsContainer.className = "row g-3"
     productsContainer.innerHTML = "";
 
     if (products.length === 0) {
-        console.log("Aucun produit trouvé.");
+        console.log("Aucun produit favori trouvé.");
         productsContainer.innerHTML = `
             <div class="alert alert-warning text-center fw-bold">
-                Aucun produit ne correspond à votre recherche.
+                Vous n'avez aucun produit favori.
             </div>
         `;
         return;
     }
 
-    products.forEach((product) => {
-        const productContent = product.product;
-        const color = product.color;
-        const size = product.size;
+    products.forEach((item) => {
+        const productContent = item.product.product || {};
+        const color = item.product.color || {};
+        const size = item.product.size || {};
+
+        if (!productContent.id || !color.id || !size.id) {
+            console.error("Les informations du produit, de la couleur ou de la taille sont manquantes.");
+            return; // Ignore le produit s'il manque des informations essentielles
+        }
 
         const productCardContainer = document.createElement("div");
-        productCardContainer.classList.add("col-lg-3", "col-md-4", "col-sm-6", "col-12");
+        productCardContainer.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3"); 
 
         const productLink = document.createElement("a");
         productLink.href = `../pages/produit.html?id=${productContent.id}`;
@@ -82,16 +107,21 @@ function displayProducts(products) {
         addtoFavButton.addEventListener("click", async (event)=> {
             event.preventDefault();
             const user = await getUser();
-            if (user !==undefined) {
+            if (user !== undefined) {
                 try {
                     favoritesManager.toggle(productContent, size, color, addtoFavButton);
+                    getFavorites()
+                        .then((response) => displayProducts(response))  // Pass the whole response object
+                        .catch((error) => console.error("Error loading products:", error));
+                    // Supprime la carte du produit du DOM
+                    addtoFavButton.closest(".col-lg-3").remove();
                 } catch (error) {
                     console.error("Erreur lors de l'ajout comme favori : ", error);
                 }
-            }   else {
+            } else {
                 window.location.href="./login.html";
             }
-        })
+        });
 
         productLink.appendChild(productCard);
         productCardContainer.appendChild(productLink);
@@ -99,61 +129,6 @@ function displayProducts(products) {
     });
 }
 
-getAllProducts()
-    .then((response) => displayProducts(response.data))
+getFavorites()
+    .then((response) => displayProducts(response))  // Pass the whole response object
     .catch((error) => console.error("Error loading products:", error));
-
-
-function loadFilters() {
-    const categorySelect = document.getElementById("category");
-    const colorSelect = document.getElementById("color");
-    const sizeSelect = document.getElementById("size");
-
-    getAllCategorys()
-        .then((response) => {
-            response.data.forEach((category) => {
-                const categoryOption = document.createElement("option");
-                categoryOption.value = category.id;
-                categoryOption.textContent = category.label;
-                categorySelect.appendChild(categoryOption);
-            });
-        })
-        .catch((error) => console.error("Erreur lors du chargement des catégories :", error));
-
-    getAllColors()
-        .then((response) => {
-            response.data.forEach((color) => {
-                const colorOption = document.createElement("option");
-                colorOption.value = color.id;
-                colorOption.textContent = color.label;
-                colorSelect.appendChild(colorOption);
-            });
-        })
-        .catch((error) => console.error("Erreur lors du chargement des couleurs :", error));
-
-    getAllSizes()
-        .then((response) => {
-            response.data.forEach((size) => {
-                const sizeOption = document.createElement("option");
-                sizeOption.value = size.id;
-                sizeOption.textContent = size.label;
-                sizeSelect.appendChild(sizeOption);
-            });
-        })
-        .catch((error) => console.error("Erreur lors du chargement des tailles :", error));
-}
-
-loadFilters();
-
-searchForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    
-    const searchQuery = document.getElementById("search").value;
-    const category = document.getElementById("category").value;
-    const color = document.getElementById("color").value;
-    const size = document.getElementById("size").value;
-
-    getAllProductsFilter(searchQuery, category, color, size)
-        .then((response) => displayProducts(response.data))
-        .catch((error) => console.error("Erreur lors de la recherche de produits :", error));
-});

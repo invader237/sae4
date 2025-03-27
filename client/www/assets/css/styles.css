@@ -596,3 +596,7 @@ input[type='number'].qte {
         position: absolute;
     }
 }
+
+.add-to-fav-btn {
+    margin-right: auto;
+}
