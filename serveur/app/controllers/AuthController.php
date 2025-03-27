@@ -1,5 +1,6 @@
 <?php
 require_once('./app/services/AuthService.php');
+require_once('./app/core/AuthMiddleware.php');
 
 class AuthController {
     public static function login() {
@@ -50,6 +51,33 @@ class AuthController {
 
         echo json_encode(["message" => "Utilisateur créé"]);
 
+    }
+
+    public static function changePassword() {
+        header('Content-Type: application/json');
+
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true); 
+
+        $oldPassword = $data['oldPassword'] ?? null;
+        $newPassword = $data['newPassword'] ?? null;
+
+        $idUser=AuthMiddleware::getUser();
+
+        if (!$idUser || !$oldPassword || !$newPassword) {
+            http_response_code(400);
+            echo json_encode(["message" => "Ancien mot de passe et nouveau mot de passe requis"]);
+            return;
+        }
+
+        $jwt = AuthService::changePassword($idUser, $oldPassword, $newPassword);
+
+        if ($jwt) {
+            echo json_encode(["token" => $jwt]);
+        } else {
+            http_response_code(401);
+            echo json_encode(["message" => "Email ou mot de passe incorrect"]);
+        }
     }
 
 
