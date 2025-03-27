@@ -30,5 +30,6 @@ function setupRoutes($router) {
     $router->add('GET', '/api/getAllOrders', [OrderController::class, 'getAll']);
     $router->add('GET', '/api/getOrderById', [OrderController::class, 'getOrderById']);
     $router->add('GET', '/api/getSku', [SkuController::class, 'getSkusByColorAndSize']);
+    $router->add('PUT', '/api/auth/changePassword', [AuthController::class, 'changePassword']);
 
 }

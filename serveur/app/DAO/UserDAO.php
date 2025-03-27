@@ -29,6 +29,16 @@ class UserDAO {
         return new User($row['id_utilisateur'], $row['prenom'], $row['nom'], $row['date_naissance'], $row['email'], $row['mdp'], $row['id_civilite']);
     }
 
+    public function getUserById(int $id): ?User {
+        $stmt = $this->pdo->prepare('SELECT * FROM UTILISATEUR WHERE id_utilisateur = :id');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        if ($row === false) {
+            return null;
+        }
+        return new User($row['id_utilisateur'], $row['prenom'], $row['nom'], $row['date_naissance'], $row['email'], $row['mdp'], $row['id_civilite']);
+    }
+
     public function createUser(User $user): void {
         $stmt = $this->pdo->prepare('INSERT INTO UTILISATEUR (prenom, nom, date_naissance, email, mdp, id_civilite) VALUES (:prenom, :nom, :date_naissance, :email, :mdp, :id_civilite)');
         $stmt->execute([
@@ -38,6 +48,14 @@ class UserDAO {
             'email' => $user->getEmail(),
             'mdp' => $user->getPwd(),
             'id_civilite' => $user->getIdTitle()
+        ]);
+    }
+
+    public function updatePassword(User $user): void {
+        $stmt = $this->pdo->prepare('UPDATE UTILISATEUR SET mdp = :mdp WHERE id_utilisateur = :id');
+        $stmt->execute([
+            'mdp' => $user->getPwd(),
+            'id' => $user->getId()
         ]);
     }
 }
