@@ -1,9 +1,11 @@
 import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId, getUser, getSku, addToCart } from "./core/api/api.js";
+import { favoritesManager } from "./favorites.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 
 let color, size;
+const button=document.querySelector(".add-to-fav-btn");
 
 (async function init() {
   try {
@@ -13,11 +15,18 @@ let color, size;
     const sizeDefault = await getSizesByProductId(id);
     size = sizeDefault.data?.[0]?.id;
 
-    const response = await getProductByIdAndColorAndSize(id, color, size);
-    afficherDetails(response.data);
-  } catch (error) {
-    console.error("Erreur lors du chargement des détails produit:", error);
-  }
+    button.data_product_id=id;
+    button.data_size_id=size;
+    button.data_color_id=color;
+
+    try {
+        const response = await getProductByIdAndColorAndSize(id, color, size);
+        afficherDetails(response.data);
+        favoritesManager.loadDetails();
+
+    } catch (error) {
+        console.error("Erreur lors du chargement des détails produit:", error);
+    }
 })();
 
 function quantiteCommandeeValide(qtte, stock) {
@@ -137,4 +146,21 @@ async function afficherDetails(product, selectedColor = color, selectedSize = si
   imprimerSelectionTaille(product.id, selectedSize);
   boutonCommander(product.id, sku.data.stock);
   mettreAJourPrixTotal(parseFloat(product.price), sku.data.stock);
+
+  favoritesManager.updateFavoriteButtons();
 }
+
+const addtoFavButton = document.querySelector(".add-to-fav-btn");
+addtoFavButton.addEventListener("click", async (event)=> {
+    event.preventDefault();
+    const user = await getUser();
+    if (user !==undefined) {
+        try {
+            favoritesManager.toggleDetails(id, size, color, addtoFavButton);
+        } catch (error) {
+            console.error("Erreur lors de l'ajout comme favori : ", error);
+        }
+    }   else {
+        window.location.href="./login.html";
+    }
+})
