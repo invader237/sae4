@@ -10,8 +10,6 @@ const connected = !!localStorage.getItem("authToken");
 let color, size;
 const button=document.querySelector(".add-to-fav-btn");
 
-
-
 (async () => {
     const colorDefault = await getColorsByProductId(id);
     color = colorDefault.data?.[0]?.id;
@@ -19,16 +17,9 @@ const button=document.querySelector(".add-to-fav-btn");
     const sizeDefault = await getSizesByProductId(id);
     size = sizeDefault.data?.[0]?.id;
 
-    button.data_product_id=id;
-    button.data_size_id=size;
-    button.data_color_id=color;
-    console.log(button.data_product_id,button.data_size_id,button.data_color_id);
-
     try {
         const response = await getProductByIdAndColorAndSize(id, color, size);
         afficherDetails(response.data);
-        favoritesManager.loadDetails();
-
     } catch (error) {
         console.error("Erreur lors du chargement des détails produit:", error);
     }
@@ -132,6 +123,10 @@ function afficherDetails(product, selectedColor = color, selectedSize = size) {
     const nbrCommande = document.getElementById("nbrCommande");
     const prixTotal = document.getElementById("prix_tot");
     const prix = parseFloat(product.price);
+    button.data_product_id=id;
+    button.data_size_id=size;
+    button.data_color_id=color;
+    favoritesManager.loadDetails();
 
     nbrCommande.addEventListener("input", (event) => {
         const val = parseInt(event.target.value);
@@ -143,8 +138,6 @@ function afficherDetails(product, selectedColor = color, selectedSize = size) {
             prixTotal.textContent = prix.toFixed(2);
         }
     });
-    favoritesManager.updateFavoriteButtons();
-
 }
 
 const addtoFavButton = document.querySelector(".add-to-fav-btn");
