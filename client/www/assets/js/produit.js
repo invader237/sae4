@@ -28,6 +28,8 @@ function quantiteCommandeeValide(qtte, stock) {
 async function creerSelect(id, options, selectedValue, labelText, onChangeHandler) {
   const selecteur = document.createElement("select");
   selecteur.id = id;
+  selecteur.className = "form-select mb-2";
+  selecteur.setAttribute("style", "min-height: 40px;");
 
   options.forEach(optionData => {
     const option = document.createElement("option");
@@ -38,7 +40,7 @@ async function creerSelect(id, options, selectedValue, labelText, onChangeHandle
   });
 
   const container = document.getElementById(id === "selectCouleur" ? "couleur" : "taille");
-  container.textContent = `${labelText} : `;
+  container.textContent = "";
   container.appendChild(selecteur);
 
   selecteur.addEventListener("change", onChangeHandler);
@@ -71,9 +73,9 @@ async function imprimerSelectionTaille(id_produit, selectedSize) {
 }
 
 async function boutonCommander(id_produit, stockDispo) {
-  const bouton = document.querySelector("input[type=button]");
+  const bouton = document.querySelector("#ajouterPanier");
   bouton.replaceWith(bouton.cloneNode(true));
-  const newButton = document.querySelector("input[type=button]");
+  const newButton = document.querySelector("#ajouterPanier");
 
   const user = await getUser();
 
@@ -116,8 +118,13 @@ async function afficherDetails(product, selectedColor = color, selectedSize = si
 
   const imageUrl = encodeURIComponent(product.urlImage);
   document.title = `${product.label} - PM2`;
-  document.querySelector(".produitDetail h1").textContent = product.label;
-  document.querySelector(".img_prod").src = `https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${imageUrl}?ref_type=heads`;
+
+  const titleEl = document.querySelector("h1.card-title");
+  const imageEl = document.getElementById("imgProduit");
+
+  if (titleEl) titleEl.textContent = product.label;
+  if (imageEl) imageEl.src = `https://gitlab.univ-lorraine.fr/laroche5/sae401_2425/-/raw/master/serveur/img/articles/${imageUrl}?ref_type=heads`;
+
   document.querySelector(".desc_prod").textContent = product.description;
   document.getElementById("sku").textContent = sku.data.label;
   document.getElementById("prix").textContent = product.price;
