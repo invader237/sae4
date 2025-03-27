@@ -161,4 +161,5 @@ addtoFavButton.addEventListener("click", async (event)=> {
     }   else {
         window.location.href="./login.html";
     }
-})
+});
+
