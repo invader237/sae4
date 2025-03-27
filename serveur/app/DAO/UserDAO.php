@@ -44,10 +44,10 @@ class UserDAO {
         $stmt->execute([
             'prenom' => $user->getFirstName(),
             'nom' => $user->getName(),
-            'date_naissance' => $user->getBirthDate(),
+            'date_naissance' => $user->getBirth(),
             'email' => $user->getEmail(),
             'mdp' => $user->getPwd(),
-            'id_civilite' => $user->getIdTitle()
+            'id_civilite' => $user->getTitle()
         ]);
     }
 
