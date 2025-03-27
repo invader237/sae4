@@ -42,6 +42,9 @@ class FavoriteController{
         $idSize = $data['idSize'] ?? null;
         $idColor = $data['idColor'] ?? null;
         
+        if(!$idProduct || !$idSize || !$idColor){
+            echo json_encode(["error" => true, "message" => "Tous les paramètres sont requis"]);
+        }
 
         FavoriteService::removeFavorites($idUser, $idProduct,$idSize, $idColor);
 

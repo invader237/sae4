@@ -20,7 +20,7 @@ class Favorites {
 
     updateFavoriteButtons() {
         // Trouve tous les boutons d'étoile sur la page et met à jour leur état
-        document.querySelectorAll('.favorite-button').forEach(button => {
+        document.querySelectorAll('.add-to-fav-btn').forEach(button => {
             const productId = button.dataset.productId;
             const sizeId = button.dataset.sizeId;
             const colorId = button.dataset.colorId;
@@ -54,7 +54,6 @@ class Favorites {
 
     async remove(product, size, color, button) {
     try {
-        console.log(`Suppression du favori : ${product.id}, ${size.id}, ${color.id}`);  // Log les valeurs
         await removeFavorites(product.id, size.id, color.id);
         this.favorites.delete(`${product.id}-${size.id}-${color.id}`);
         this.updateButton(button, false);
@@ -71,4 +70,3 @@ class Favorites {
 }
 
 export const favoritesManager = new Favorites();
-favoritesManager.load();
