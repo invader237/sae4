@@ -28,6 +28,7 @@ function displayProducts(response) {
     const products = response.data.favoris; // Accédez à 'favoris' depuis 'data'
     favoritesManager.load();
     const productsContainer = document.getElementById("productsContainer");
+    productsContainer.className = "row g-3"
     productsContainer.innerHTML = "";
 
     if (products.length === 0) {
@@ -51,7 +52,7 @@ function displayProducts(response) {
         }
 
         const productCardContainer = document.createElement("div");
-        productCardContainer.classList.add("col-lg-3", "col-md-4", "col-sm-6", "col-12");
+        productCardContainer.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3"); // ou p-2, ou w-100, selon ton design
 
         const productLink = document.createElement("a");
         productLink.href = `../pages/produit.html?id=${productContent.id}`;
