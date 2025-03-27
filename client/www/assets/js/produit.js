@@ -1,12 +1,16 @@
-import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId } from "./core/api/api.js";
-import { addToCart} from "./core/api/api.js";
+import { getProductByIdAndColorAndSize, getColorsByProductId, getSizesByProductId, addToCart, getUser } from "./core/api/api.js";
+import { favoritesManager } from "./favorites.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 const connected = !!localStorage.getItem("authToken");
 
+
 // Initialisation par défaut de la couleur et de la taille
 let color, size;
+const button=document.querySelector(".add-to-fav-btn");
+
+
 
 (async () => {
     const colorDefault = await getColorsByProductId(id);
@@ -15,9 +19,16 @@ let color, size;
     const sizeDefault = await getSizesByProductId(id);
     size = sizeDefault.data?.[0]?.id;
 
+    button.data_product_id=id;
+    button.data_size_id=size;
+    button.data_color_id=color;
+    console.log(button.data_product_id,button.data_size_id,button.data_color_id);
+
     try {
         const response = await getProductByIdAndColorAndSize(id, color, size);
         afficherDetails(response.data);
+        favoritesManager.loadDetails();
+
     } catch (error) {
         console.error("Erreur lors du chargement des détails produit:", error);
     }
@@ -132,4 +143,21 @@ function afficherDetails(product, selectedColor = color, selectedSize = size) {
             prixTotal.textContent = prix.toFixed(2);
         }
     });
+    favoritesManager.updateFavoriteButtons();
+
 }
+
+const addtoFavButton = document.querySelector(".add-to-fav-btn");
+addtoFavButton.addEventListener("click", async (event)=> {
+    event.preventDefault();
+    const user = await getUser();
+    if (user !==undefined) {
+        try {
+            favoritesManager.toggleDetails(id, size, color, addtoFavButton);
+        } catch (error) {
+            console.error("Erreur lors de l'ajout comme favori : ", error);
+        }
+    }   else {
+        window.location.href="./login.html";
+    }
+})
