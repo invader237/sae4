@@ -42,3 +42,8 @@ function displayError(message) {
     errorMessage.innerText = message;
     errorMessage.removeAttribute("hidden");
 }
+
+const createBtn = document.getElementById("createAccountBtn");
+createBtn?.addEventListener("click", () => {
+    window.location.href = "../pages/register.html";
+});
