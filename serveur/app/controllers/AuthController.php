@@ -34,20 +34,20 @@ class AuthController {
         $body = file_get_contents('php://input');
         $data = json_decode($body, true); 
 
-        $prenom = $data['prenom'] ?? null;
-        $nom = $data['nom'] ?? null;
-        $date_naissance = $data['date_naissance'] ?? null;
+        $firstName = $data['prenom'] ?? null;
+        $name = $data['nom'] ?? null;
+        $birth = $data['date_naissance'] ?? null;
         $email = $data['email'] ?? null;
-        $mdp = $data['mdp'] ?? null;
-        $id_civilite = $data['id_civilite'] ?? null;
+        $password = $data['mdp'] ?? null;
+        $idTitle = $data['id_civilite'] ?? null;
 
-        if (!$prenom || !$nom || !$date_naissance || !$email || !$mdp || !$id_civilite) {
+        if (!$firstName || !$name || !$birth || !$email || !$password || !$idTitle) {
             http_response_code(400);
             echo json_encode(["message" => "Tous les champs sont requis"]);
             return;
         }
 
-        AuthService::register($prenom, $nom, $date_naissance, $email, $mdp, $id_civilite);
+        AuthService::register($firstName, $name, $birth, $email, $password, $idTitle);
 
         echo json_encode(["message" => "Utilisateur créé"]);
 
