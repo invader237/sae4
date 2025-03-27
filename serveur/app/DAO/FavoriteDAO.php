@@ -81,13 +81,13 @@ class FavoriteDAO{
         ]);
     }
 
-    public function removeFavorites($idUser, $idProduct, $idColor, $idSize): void {
+    public function removeFavorites($idUser, $idProduct, $idSize, $idColor): void {
         $stmt = $this->pdo->prepare(
             'DELETE FROM FAVORIS
             WHERE id_utilisateur = :idUser
             AND id_produit = :idProduct
-            AND id_couleur = :idColor
-            AND id_taille = :idSize;'
+            AND id_taille = :idSize
+            AND id_couleur = :idColor;'
         );
 
         $stmt->execute([

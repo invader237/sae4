@@ -273,7 +273,7 @@ export const addFavorites=async(id, size, color)=>{
 
 export const removeFavorites=async(id,size,color)=>{
     try {
-        console.log("Retrait des favoris favoris:", { id, size, color });
+        console.log("Retrait des favoris:", { id, size, color });
         const response=await axiosInstance.delete("/removeFavorites",{
             idProduct: id,
             idSize: size,

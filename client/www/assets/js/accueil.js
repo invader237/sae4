@@ -1,4 +1,4 @@
-import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser, getFavorites } from "./core/api/api.js";
+import { getAllProducts, getAllProductsFilter, addToCart, getAllSizes, getAllColors, getAllCategorys, getUser } from "./core/api/api.js";
 import {favoritesManager} from "./favorites.js"
 
 

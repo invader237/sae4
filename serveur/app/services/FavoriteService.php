@@ -15,10 +15,10 @@ class FavoriteService{
         $favoriteDAO=new FavoriteDAO($db);
         $favorite=$favoriteDAO->addFavorites($idUser,$idProduct,$idSize,$idColor);
     }
-    public static function removeFavorites($idUser, $idProduct, $idColor, $idSize):void{
+    public static function removeFavorites($idUser, $idProduct, $idSize, $idColor):void{
         $db=Database::getConnection();
         $favoriteDAO=new FavoriteDAO($db);
-        $favorite=$favoriteDAO->removeFavorites($idUser, $idProduct, $idColor, $idSize);
+        $favorite=$favoriteDAO->removeFavorites($idUser, $idProduct, $idSize, $idColor);
     }
     public static function removeAllFavorites($idUser):void{
         $db=Database::getConnection();

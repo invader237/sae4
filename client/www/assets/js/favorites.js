@@ -53,14 +53,15 @@ class Favorites {
     }
 
     async remove(product, size, color, button) {
-        try {
-            await removeFavorites(product.id, size.id, color.id);
-            this.favorites.delete(`${product.id}-${size.id}-${color.id}`);
-            this.updateButton(button, false);
-        } catch (error) {
-            console.error("Erreur lors de la suppression des favoris:", error);
-        }
+    try {
+        console.log(`Suppression du favori : ${product.id}, ${size.id}, ${color.id}`);  // Log les valeurs
+        await removeFavorites(product.id, size.id, color.id);
+        this.favorites.delete(`${product.id}-${size.id}-${color.id}`);
+        this.updateButton(button, false);
+    } catch (error) {
+        console.error("Erreur lors de la suppression des favoris:", error);
     }
+}
 
     updateButton(button, isFavorite) {
         const img = button.querySelector("img");
