@@ -289,7 +289,7 @@ export const removeFavorites=async(id,size,color)=>{
 
 export const removeAllFavorites=async()=>{
     try {
-        const response=await axiosInstance.get("/removeAllFavorites");
+        const response=await axiosInstance.delete("/removeAllFavorites");
         return response.data;
     } catch (error) {
         console.error(error);

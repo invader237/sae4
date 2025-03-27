@@ -26,7 +26,6 @@ clearButton.addEventListener("click", async (event) => {
 
 function displayProducts(response) {
     const products = response.data.favoris; // Accédez à 'favoris' depuis 'data'
-    console.log(products);
     favoritesManager.load();
     const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
@@ -113,6 +112,8 @@ function displayProducts(response) {
                     getFavorites()
                         .then((response) => displayProducts(response))  // Pass the whole response object
                         .catch((error) => console.error("Error loading products:", error));
+                    // Supprime la carte du produit du DOM
+                    addtoFavButton.closest(".col-lg-3").remove();
                 } catch (error) {
                     console.error("Erreur lors de l'ajout comme favori : ", error);
                 }
