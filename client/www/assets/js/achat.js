@@ -1,9 +1,37 @@
 import { getCart, getUser, getDelivery, validateOrder } from "./core/api/api.js";
 
-const response = await getUser();
+document.addEventListener("DOMContentLoaded", () => {
+    (async () => {
 
-if (response === undefined) {
-    window.location.href = "./login.html";
+        try {
+            const response = await getUser();
+
+            if (!response?.data) {
+                window.location.href = "./login.html";
+                return;
+            }
+
+            displayUser(response.data);
+            await displayOrderSummary();
+            await displayDeliveryOptions();
+            updateTotalWithShipping();
+            watchTotalAndRenderButton();
+            initMap();
+            listenToAddressChange();
+
+            document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);
+
+        } catch (error) {
+            console.error("Erreur globale :", error);
+            alert("Une erreur est survenue.");
+        }
+    })();
+});
+
+function displayUser(user) {
+    document.getElementById("email").textContent = user.email ?? "Inconnu";
+    document.getElementById("nom").textContent = user.name ?? "-";
+    document.getElementById("prenom").textContent = user.firstName ?? "-";
 }
 
 function createOrderSummaryItem(entry) {
@@ -75,6 +103,8 @@ async function displayOrderSummary() {
 
 async function displayDeliveryOptions() {
     const livraisonSelect = document.getElementById("livraison");
+    if (!livraisonSelect) return;
+
     try {
         const { data: deliveryOptions = [] } = await getDelivery();
         livraisonSelect.innerHTML = '';
@@ -94,47 +124,89 @@ async function displayDeliveryOptions() {
     }
 }
 
-displayDeliveryOptions();
-
 function updateTotalWithShipping() {
-    const prixTotal = parseFloat(document.getElementById("prixTotal").textContent || 0);
+    const prixTotal = parseFloat(document.getElementById("prixTotal")?.textContent || 0);
     const livraisonSelect = document.getElementById("livraison");
-    const selectedOption = livraisonSelect.options[livraisonSelect.selectedIndex];
+    const selectedOption = livraisonSelect?.options[livraisonSelect.selectedIndex];
     const frais = parseFloat(selectedOption?.dataset?.frais || 0);
 
     document.getElementById("livraisonFrais").textContent = frais.toFixed(2);
     document.getElementById("totalAPayer").textContent = (prixTotal + frais).toFixed(2);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    displayOrderSummary();
-    displayUser();
-    setTimeout(updateTotalWithShipping, 500);
-});
+function watchTotalAndRenderButton() {
+    let lastTotal = 0;
+    setInterval(() => {
+        const totalText = document.getElementById('totalAPayer')?.textContent;
+        const total = parseFloat(totalText);
 
-function displayUser() {
-    getUser()
-        .then(({ data: user }) => {
-            document.getElementById("email").textContent = user.email;
-            document.getElementById("nom").textContent = user.name;
-            document.getElementById("prenom").textContent = user.firstName;
-        })
-        .catch(error => {
-            console.error("Erreur lors de la récupération de l'utilisateur :", error);
-            document.getElementById("email").textContent = 'Utilisateur inconnu';
-        });
+        if (!isNaN(total) && total > 0 && total !== lastTotal) {
+            renderPayPalButton(total);
+            lastTotal = total;
+        }
+    }, 500);
 }
 
-const map = L.map('map').setView([48.8566, 2.3522], 13);
+function renderPayPalButton(total) {
+    const container = document.getElementById("paypal-button-container");
+    if (!container) return;
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
-}).addTo(map);
+    container.innerHTML = "";
 
-let marker;
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{ amount: { value: total.toFixed(2) } }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                const idPayment = details.id;
+                const idDelivery = document.getElementById("livraison")?.value;
+                const deliveryAdress = document.getElementById("adresse")?.value;
+
+                validateOrder(idPayment, idDelivery, deliveryAdress)
+                .then(() => {
+                    window.location.href = "./confirmation.html";
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la validation de la commande :", error);
+                    alert("Erreur lors de la validation de la commande.");
+                });
+            });
+        }
+    }).render('#paypal-button-container');
+}
+
+let map, marker;
+
+function initMap() {
+    const mapElement = document.getElementById("map");
+    if (!mapElement) return;
+
+    map = L.map("map").setView([48.8566, 2.3522], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+}
+
+function listenToAddressChange() {
+    const adresseInput = document.getElementById('adresse');
+    if (!adresseInput) return;
+
+    adresseInput.addEventListener('input', () => {
+        const adresse = adresseInput.value.trim();
+        if (adresse.length > 5) {
+            updateMapFromAddress(adresse);
+        }
+    });
+}
 
 async function updateMapFromAddress(address) {
+    if (!map) return;
+
     try {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
         const response = await fetch(url);
@@ -159,74 +231,3 @@ async function updateMapFromAddress(address) {
         console.error("Erreur lors de la mise à jour de la carte :", error);
     }
 }
-
-const adresseInput = document.getElementById('adresse');
-adresseInput?.addEventListener('input', () => {
-    const adresse = adresseInput.value.trim();
-    if (adresse.length > 5) {
-        updateMapFromAddress(adresse);
-    }
-});
-
-let paypalRendered = false;
-
-function renderPayPalButton(total) {
-    document.getElementById("paypal-button-container").innerHTML = "";
-
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: total.toFixed(2)
-                    }
-                }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                const idPayment = details.id;
-                const idDelivery = document.getElementById("livraison").value;
-                const deliveryAdress = document.getElementById("adresse").value;
-                validateOrder(idPayment, idDelivery, deliveryAdress)
-                window.location.href = "./confirmation.html";
-            });
-        }
-    }).render('#paypal-button-container');
-
-    paypalRendered = true;
-}
-
-function watchTotalAndRenderButton() {
-    let lastTotal = 0;
-    setInterval(() => {
-        const totalText = document.getElementById('totalAPayer')?.textContent;
-        const total = parseFloat(totalText);
-
-        if (!isNaN(total) && total > 0 && total !== lastTotal) {
-            renderPayPalButton(total);
-            lastTotal = total;
-        }
-    }, 500);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    watchTotalAndRenderButton();
-
-    const map = L.map('map', {
-        dragging: false, 
-        zoomControl: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-        boxZoom: false,
-        keyboard: false,
-        tap: false,
-        touchZoom: false
-    }).setView([48.8566, 2.3522], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-});
-
-document.getElementById("livraison")?.addEventListener("change", updateTotalWithShipping);
