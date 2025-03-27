@@ -38,11 +38,12 @@ class FavoriteController{
         $body = file_get_contents('php://input');
         $data = json_decode($body, true); 
 
-        $produitId = $data['idProduct'] ?? null;
-        $idColor = $data['idColor'] ?? null;
+        $idProduct = $data['idProduct'] ?? null;
         $idSize = $data['idSize'] ?? null;
+        $idColor = $data['idColor'] ?? null;
+        
 
-        FavoriteService::removeFavorites($idUser, $produitId, $idColor, $idSize);
+        FavoriteService::removeFavorites($idUser, $idProduct,$idSize, $idColor);
 
         echo json_encode(["success" => true, "message" => "Favori supprimé avec succès"]);
     }
@@ -51,7 +52,7 @@ class FavoriteController{
         header("Content-Type: application/json");
         
         $idUser=AuthMiddleware::getUser();
-
+        
         FavoriteService::removeAllFavorites($idUser);
 
         echo json_encode(["success" => true, "message" => "Tous les produits ont été supprimés avec succès"]);
