@@ -120,5 +120,14 @@ class CartDAO {
 
         $stmt->execute(['idUser' => $idUser]);
     }
+
+    public function createCart($idUser): void {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO PANIER (id_utilisateur, est_actif)
+            VALUES (:idUser, 1);'
+        );
+
+        $stmt->execute(['idUser' => $idUser]);
+    }
 }
 ?>

@@ -8,6 +8,7 @@ use Firebase\JWT\Key;
 require_once('./app/core/VarEnv.php');
 
 require_once('./app/DAO/UserDAO.php');
+require_once('./app/DAO/CartDAO.php');
 require_once('./app/entity/User.php');
 require_once('./app/core/Connexion.php');
 
@@ -42,9 +43,15 @@ class AuthService {
 
     public static function register($firstName, $name, $birthDate, $email, $pwd, $idTitle) {
         $db = Database::getConnection();
+
         $userDAO = new UserDAO($db);
         $user = new User(0, $firstName, $name, $birthDate, $email, hash('sha256', $pwd), $idTitle);
         $userDAO->createUser($user);
+
+        $user = $userDAO->getUserByEmail($email); //temporary fix
+
+        $cartDAO = new CartDAO($db);
+        $cartDAO->createCart($user->getId());
     }
 
     public static function changePassword($id, $oldPwd, $newPwd) {
