@@ -20,8 +20,8 @@ function setupRoutes($router) {
     $router->add("GET","/api/getColorsByProductId", [ColorController::class, "getColorsByProductId"]);
     $router->add('GET',"/api/getPanier", [CartController::class, "getCart"]);
     $router->add('POST',"/api/addProduit", [CartController::class, "addProduct"]);
-    $router->add('DELETE', '/api/deleteProduct', [CartController::class, 'removeProduct']);
-    $router->add('DELETE', '/api/deleteAllProducts', [CartController::class, 'removeAllProduct']);
+    $router->add('POST', '/api/deleteProduct', [CartController::class, 'removeProduct']);
+    $router->add('POST', '/api/deleteAllProducts', [CartController::class, 'removeAllProduct']);
     $router->add('GET', '/api/getUser', [UserController::class, 'getUser']);
     $router->add('GET', '/api/delivery', [DeliveryController::class, 'getAll']);
     $router->add('GET', '/api/getColor', [ColorController::class, 'getAll']);
@@ -34,11 +34,7 @@ function setupRoutes($router) {
     $router->add('PUT', '/api/auth/changePassword', [AuthController::class, 'changePassword']);
     $router->add('GET', '/api/getFavorites', [FavoriteController::class, 'getFavorites']);
     $router->add('POST', '/api/addFavorites', [FavoriteController::class, 'addFavorites']);
-    $router->add('DELETE', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
-    $router->add('DELETE', '/api/removeAllFavorites', [FavoriteController::class, 'removeAllFavorites']);
-    $router->add('GET', '/api/getFavorites', [FavoriteController::class, 'getFavorites']);
-    $router->add('POST', '/api/addFavorites', [FavoriteController::class, 'addFavorites']);
-    $router->add('DELETE', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
-    $router->add('DELETE', '/api/removeAllFavorites', [FavoriteController::class, 'removeAllFavorites']);
+    $router->add('POST', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
+    $router->add('POST', '/api/removeAllFavorites', [FavoriteController::class, 'removeAllFavorites']);
 
 }

@@ -119,27 +119,25 @@ export const addToCart = async (id, quantity, color, size) => {
 
 export const deleteFromCart = async (id, color, size) => {
     try {
-        const response = await axiosInstance.delete("/deleteProduct", {
-            data: {
-                idProduct: id,
-                idColor: color,
-                idSize: size
-            }
+        const response = await axiosInstance.post("/deleteProduct", {
+            idProduct: id,
+            idColor: color,
+            idSize: size
         });
         return response.data;
     } catch (error) {
-        console.error("Erreur axios delete:", error);
+        console.error("Erreur axios post:", error);
     }
 };
 
 export const deleteAllFromCart = async () => {
     try {
-        const response = await axiosInstance.delete("/deleteAllProducts");
+        const response = await axiosInstance.post("/deleteAllProducts");
         return response.data;
     } catch (error) {
-        console.error("Erreur axios delete:", error);
+        console.error("Erreur axios post:", error);
     }
-}
+};
 
 export const getUser = async () => {
     try {
@@ -271,27 +269,25 @@ export const addFavorites=async(id, size, color)=>{
     }
 }
 
-export const removeFavorites=async(id,size,color)=>{
+export const removeFavorites = async (id, size, color) => {
     try {
         console.log("Retrait des favoris:", { id, size, color });
-        const response=await axiosInstance.delete("/removeFavorites",{
-            data: {
-                idProduct: id,
-                idColor: color,
-                idSize: size
-            }
+        const response = await axiosInstance.post("/removeFavorites", {
+            idProduct: id,
+            idColor: color,
+            idSize: size
         });
-        return response.data;
-    } catch(error) {
-        console.error(error);
-    }
-}
-
-export const removeAllFavorites=async()=>{
-    try {
-        const response=await axiosInstance.delete("/removeAllFavorites");
         return response.data;
     } catch (error) {
         console.error(error);
     }
-}
+};
+
+export const removeAllFavorites = async () => {
+    try {
+        const response = await axiosInstance.post("/removeAllFavorites");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
