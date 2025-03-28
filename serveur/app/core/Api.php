@@ -31,7 +31,7 @@ function setupRoutes($router) {
     $router->add('GET', '/api/getAllOrders', [OrderController::class, 'getAll']);
     $router->add('GET', '/api/getOrderById', [OrderController::class, 'getOrderById']);
     $router->add('GET', '/api/getSku', [SkuController::class, 'getSkusByColorAndSize']);
-    $router->add('PUT', '/api/auth/changePassword', [AuthController::class, 'changePassword']);
+    $router->add('POST', '/api/auth/changePassword', [AuthController::class, 'changePassword']);
     $router->add('GET', '/api/getFavorites', [FavoriteController::class, 'getFavorites']);
     $router->add('POST', '/api/addFavorites', [FavoriteController::class, 'addFavorites']);
     $router->add('POST', '/api/removeFavorites', [FavoriteController::class, 'removeFavorites']);
