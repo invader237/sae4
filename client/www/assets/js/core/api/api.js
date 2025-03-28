@@ -245,7 +245,7 @@ export const getFavorites=async()=>{
 
 export const changePassword = async (oldPassword, newPassword) => {
     try {
-        const response = await axiosInstance.put("/auth/changePassword", {
+        const response = await axiosInstance.post("/auth/changePassword", {
             oldPassword: oldPassword,
             newPassword: newPassword
         });
